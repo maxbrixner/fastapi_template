@@ -4,13 +4,14 @@ import fastapi
 
 # ---------------------------------------------------------------------------- #
 
+from app.core.config import settings
 from .endpoints import user_router
 
 # ---------------------------------------------------------------------------- #
 
 
-router = fastapi.APIRouter()
+router = fastapi.APIRouter(prefix="/api/v1", tags=["v1"])
 
-router.include_router(user_router, tags=["user"])
+router.include_router(user_router)
 
 # ---------------------------------------------------------------------------- #

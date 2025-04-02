@@ -25,8 +25,6 @@ class Settings():
         backend_enable_cors: bool
         backend_cors_origins: List[str]
 
-        api_v1_str: str
-
     _settings: SettingsSchema | None
 
     def __init__(self) -> None:
