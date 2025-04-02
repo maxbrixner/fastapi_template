@@ -1,31 +1,74 @@
 # ---------------------------------------------------------------------------- #
 
 import pydantic
-from typing import List
+import pathlib
+import os
+import json
+from typing import Any, List
 
 # ---------------------------------------------------------------------------- #
 
 
-def load_settings():
-    class Settings(pydantic.BaseModel):
-        project_name: str = "project"
-        project_description: str = "A FastAPI project template."
-        project_version: str = "0.1.0"
-        project_author: str = "Max Brixner"
+class Settings():
+    """
+    Load and access application settings.
+    """
+    class SettingsSchema(pydantic.BaseModel):
+        project_name: str
+        project_description: str
+        project_version: str
+        project_author: str
 
-        backend_host: str = "0.0.0.0"
-        backend_port: int = 8000
+        backend_host: str
+        backend_port: int
 
-        backend_enable_cors: bool = True
-        backend_cors_origins: List[str] = []
+        backend_enable_cors: bool
+        backend_cors_origins: List[str]
 
-        api_v1_str: str = "/api/v1"
+        api_v1_str: str
 
-    return Settings()
+    _settings: SettingsSchema | None
+
+    def __init__(self) -> None:
+        self._settings = None
+
+    def load_settings(self) -> None:
+        """
+        Load settings from a json file.
+        """
+        filename = os.getenv("SETTINGS", None)
+
+        if not filename:
+            raise Exception("SETTINGS environment variable not set.")
+
+        settings_file = pathlib.Path(__file__).parent.parent / \
+            pathlib.Path("config") / \
+            pathlib.Path(filename)
+
+        with settings_file.open("r") as file:
+            content = json.load(file)
+            self._settings = self.SettingsSchema(**content)
+
+    def __getattr__(self, name: str) -> Any:
+        """
+        Get the attribute from the settings.
+        """
+        if name == "_settings":
+            return self.__dict__["_settings"]
+
+        settings = self.__dict__["_settings"]
+
+        if not settings:
+            raise Exception("Settings not loaded. Call load_settings() first.")
+
+        if not hasattr(settings, name):
+            raise AttributeError(f"Settings object has no attribute '{name}'")
+
+        return getattr(settings, name)
 
 # ---------------------------------------------------------------------------- #
 
 
-settings = load_settings()
+settings = Settings()
 
 # ---------------------------------------------------------------------------- #

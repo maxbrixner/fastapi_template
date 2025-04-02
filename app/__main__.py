@@ -1,15 +1,25 @@
 # ---------------------------------------------------------------------------- #
 
 import fastapi
-import fastapi.middleware.cors
 import uvicorn
 import logging
+
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import HTTPException
+from starlette.exceptions import HTTPException as StarlettHTTPException
+
 from contextlib import asynccontextmanager
 
 # ---------------------------------------------------------------------------- #
 
 from app.core.config import settings
+from app.core.database import database
 from app.api.v1 import router as routerv1
+
+# ---------------------------------------------------------------------------- #
+
+
+logger = logging.getLogger("app")
 
 # ---------------------------------------------------------------------------- #
 
@@ -21,14 +31,21 @@ async def lifespan(app: fastapi.FastAPI):
     and shutdown logic."
     """
     logging.basicConfig(level=logging.DEBUG)
-    logger = logging.getLogger("app")
-    logger.info(f"INFO:     Starting up {settings.project_name}...")
-    # todo: await init_db()
-    logger.info("INFO:     Application startup complete.")
+
+    logger.info("Starting up application...")
+    database.connect()
+    logger.info("Application startup complete.")
+
     yield
-    logger.info("INFO:     Shutting down application...")
-    # todo: await close_db_connections()
-    logger.info("INFO:     Application shutdown complete.")
+
+    logger.info("Shutting down application...")
+    database.disconnect()
+    logger.info("Application shutdown complete.")
+
+# ---------------------------------------------------------------------------- #
+
+
+settings.load_settings()
 
 # ---------------------------------------------------------------------------- #
 
@@ -48,7 +65,7 @@ app = fastapi.FastAPI(
 
 if settings.backend_enable_cors:
     app.add_middleware(
-        fastapi.middleware.cors.CORSMiddleware,
+        CORSMiddleware,
         allow_origins=[str(origin).strip("/")
                        for origin in settings.backend_cors_origins],
         allow_credentials=True,
@@ -57,7 +74,7 @@ if settings.backend_enable_cors:
     )
 else:
     app.add_middleware(
-        fastapi.middleware.cors.CORSMiddleware,
+        CORSMiddleware,
         allow_origins=["*"],
         allow_credentials=True,
         allow_methods=["*"],
@@ -66,24 +83,37 @@ else:
 
 # ---------------------------------------------------------------------------- #
 
-
 app.include_router(routerv1, prefix=settings.api_v1_str, tags=["v1"])
 
 # ---------------------------------------------------------------------------- #
 
 
-# --- Optional: Custom Exception Handlers ---
-# You can add custom handlers here if needed, for example:
-# from fastapi import Request, status
-# from fastapi.responses import JSONResponse
-# from app.core.exceptions import CustomAPIException
-#
-# @app.exception_handler(CustomAPIException)
-# async def custom_api_exception_handler(request: Request, exc: CustomAPIException):
-#     return JSONResponse(
-#         status_code=exc.status_code,
-#         content={"detail": exc.detail},
-#     )
+@app.exception_handler(Exception)
+async def exception_handler(
+    request: fastapi.Request,
+    exception: Exception
+):
+    logger.warning(f"Exception handled: {exception}")
+    return fastapi.responses.JSONResponse(
+        status_code=500,
+        content={"detail": "Internal Server Error"},
+    )
+
+
+# ---------------------------------------------------------------------------- #
+
+
+@app.exception_handler(HTTPException)
+@app.exception_handler(StarlettHTTPException)
+async def http_exception_handler(
+    request: fastapi.Request,
+    exception: Exception
+):
+    logger.warning(f"HTTP Exception handled: {exception}")
+    return fastapi.responses.JSONResponse(
+        status_code=500,
+        content={"detail": "Internal Server Error"},
+    )
 
 # ---------------------------------------------------------------------------- #
 
