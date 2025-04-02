@@ -13,6 +13,7 @@ from contextlib import asynccontextmanager
 # ---------------------------------------------------------------------------- #
 
 from app.core.config import settings
+from app.core.logging import setup_logging
 from app.core.database import database
 from app.api.v1 import router as routerv1
 
@@ -30,7 +31,7 @@ async def lifespan(app: fastapi.FastAPI):
     Context manager for FastAPI lifespan events. Handles application startup"
     and shutdown logic."
     """
-    logging.basicConfig(level=logging.DEBUG)
+    setup_logging()
 
     logger.info("Starting up application...")
     database.connect()
