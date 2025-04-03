@@ -61,6 +61,7 @@ app = fastapi.FastAPI(
 
 # ---------------------------------------------------------------------------- #
 
+
 if config.cors_enabled:
     app.add_middleware(
         CORSMiddleware,
@@ -78,8 +79,8 @@ else:
         allow_headers=["*"],
     )
 
-
 # ---------------------------------------------------------------------------- #
+
 
 app.include_router(routerv1)
 
