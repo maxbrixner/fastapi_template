@@ -5,6 +5,15 @@
     "project_author": "John Doe",
     "backend_host": "0.0.0.0",
     "backend_port": 8000,
-    "backend_enable_cors": true,
-    "backend_cors_origins": []
+    "cors_enabled": true,
+    "cors_allow_origins": [
+        "*"
+    ],
+    "cors_allow_credentials": true,
+    "cors_allow_methods": [
+        "*"
+    ],
+    "cors_allow_headers": [
+        "*"
+    ]
 }

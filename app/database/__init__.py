@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------------------- #
 
-from .config import config
-from .dependencies import ConfigDependency
+from .database import database
+from .dependencies import DatabaseDependency
 
 # ---------------------------------------------------------------------------- #

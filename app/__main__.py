@@ -12,9 +12,8 @@ from contextlib import asynccontextmanager
 
 # ---------------------------------------------------------------------------- #
 
-from app.core.config import settings
-from app.core.logging import setup_logging
-from app.core.database import database
+from app.core import config
+from app.database import database
 from app.api.v1 import router as routerv1
 
 # ---------------------------------------------------------------------------- #
@@ -22,39 +21,36 @@ from app.api.v1 import router as routerv1
 
 logger = logging.getLogger("app")
 
+config.setup_logging()
+
+config.load_configuration()
+
 # ---------------------------------------------------------------------------- #
 
 
 @asynccontextmanager
 async def lifespan(app: fastapi.FastAPI):
     """
-    Context manager for FastAPI lifespan events. Handles application startup"
-    and shutdown logic."
+    Context manager for FastAPI lifespan events. Handles application startup
+    and shutdown logic.
     """
-    setup_logging()
-
-    logger.info("Starting up application...")
     database.connect()
+
     logger.info("Application startup complete.")
 
     yield
 
-    logger.info("Shutting down application...")
     database.disconnect()
+
     logger.info("Application shutdown complete.")
 
 # ---------------------------------------------------------------------------- #
 
 
-settings.load_settings()
-
-# ---------------------------------------------------------------------------- #
-
-
 app = fastapi.FastAPI(
-    title=settings.project_name,
-    description=settings.project_description,
-    version=settings.project_version,
+    title=config.project_name,
+    description=config.project_description,
+    version=config.project_version,
     openapi_url=f"/openapi.json",
     docs_url="/docs",
     redoc_url=None,
@@ -63,15 +59,13 @@ app = fastapi.FastAPI(
 
 # ---------------------------------------------------------------------------- #
 
-
-if settings.backend_enable_cors:
+if config.cors_enabled:
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[str(origin).strip("/")
-                       for origin in settings.backend_cors_origins],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        allow_origins=config.cors_allow_origins,
+        allow_credentials=config.cors_allow_credentials,
+        allow_methods=config.cors_allow_methods,
+        allow_headers=config.cors_allow_headers
     )
 else:
     app.add_middleware(
@@ -81,6 +75,7 @@ else:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
 
 # ---------------------------------------------------------------------------- #
 
@@ -120,7 +115,7 @@ async def http_exception_handler(
 
 
 if __name__ == "__main__":
-    uvicorn.run(app="app.__main__:app", host=settings.backend_host,
-                port=settings.backend_port, reload=True)
+    uvicorn.run(app="app.__main__:app", host=config.backend_host,
+                port=config.backend_port, reload=True)
 
 # ---------------------------------------------------------------------------- #

@@ -4,16 +4,19 @@ import pydantic
 import pathlib
 import os
 import json
-from typing import Any, List
+import logging
+from typing import List, Self
 
 # ---------------------------------------------------------------------------- #
 
 
-class Settings():
+class Configuration():
     """
-    Load and access application settings.
+    A simple configuration management class. The _ConfigSchema class
+    defines the schema for the configuration file. The Configuration class
+    loads the configuration file and provides access to its attributes.
     """
-    class SettingsSchema(pydantic.BaseModel):
+    class _ConfigSchema(pydantic.BaseModel):
         project_name: str
         project_description: str
         project_version: str
@@ -22,51 +25,92 @@ class Settings():
         backend_host: str
         backend_port: int
 
-        backend_enable_cors: bool
-        backend_cors_origins: List[str]
+        cors_enabled: bool
+        cors_allow_origins: List[str]
+        cors_allow_credentials: bool
+        cors_allow_methods: List[str]
+        cors_allow_headers: List[str]
 
-    _settings: SettingsSchema | None
+    _logger: logging.Logger
+    _config: _ConfigSchema | None
 
     def __init__(self) -> None:
-        self._settings = None
+        """
+        Initialize the Configuration class.
+        """
+        self._logger = logging.getLogger("app.core.config")
+        self._config = None
 
-    def load_settings(self) -> None:
+    def load_configuration(self) -> None:
         """
-        Load settings from a json file.
+        Load the configuration file from the config directory. The filename
+        is specified in the CONFIG environment variable.
         """
-        filename = os.getenv("SETTINGS", None)
+        filename = os.getenv("CONFIG")
 
         if not filename:
-            raise Exception("SETTINGS environment variable not set.")
+            raise Exception("CONFIG environment variable not set.")
 
-        settings_file = pathlib.Path(__file__).parent.parent / \
+        config_file = pathlib.Path(__file__).parent.parent / \
             pathlib.Path("config") / \
             pathlib.Path(filename)
 
-        with settings_file.open("r") as file:
+        with config_file.open("r") as file:
             content = json.load(file)
-            self._settings = self.SettingsSchema(**content)
+            self._config = self._ConfigSchema(**content)
 
-    def __getattr__(self, name: str) -> Any:
+        self._logger.info(f"Application configuration loaded.")
+
+    def setup_logging(self) -> None:
         """
-        Get the attribute from the settings.
+        Set up logging configuration. The filename is specified in the
+        LOGGING environment variable.
         """
-        if name == "_settings":
-            return self.__dict__["_settings"]
+        filename = os.getenv("LOGGING", None)
 
-        settings = self.__dict__["_settings"]
+        if not filename:
+            raise Exception("LOGGING environment variable not set.")
 
-        if not settings:
-            raise Exception("Settings not loaded. Call load_settings() first.")
+        logging_file = pathlib.Path(__file__).parent.parent / \
+            pathlib.Path("config") / \
+            pathlib.Path(filename)
 
-        if not hasattr(settings, name):
-            raise AttributeError(f"Settings object has no attribute '{name}'")
+        with logging_file.open("r") as file:
+            content = json.load(file)
+            logging.config.dictConfig(content)
 
-        return getattr(settings, name)
+        self._logger.info(f"Logging configuration loaded.")
+
+    def get_config(self) -> Self:
+        """
+        Retrieve self. This method is used to create the FastAPI dependency.
+        """
+        return self
+
+    def __getattr__(self, name: str) -> str:
+        """
+        Get an attribute of the configuration.
+        """
+        if name == "_config":
+            return self.__dict__["_config"]
+
+        if "_config" not in self.__dict__:
+            raise Exception("Configuration not loaded.")
+
+        config = self.__dict__["_config"]
+
+        if config is None:
+            raise Exception("Configuration not loaded.")
+
+        if not hasattr(config, name):
+            raise AttributeError(f"Configuration has no attribute '{name}'.")
+
+        return getattr(config, name)
+
 
 # ---------------------------------------------------------------------------- #
 
 
-settings = Settings()
+config = Configuration()
 
 # ---------------------------------------------------------------------------- #

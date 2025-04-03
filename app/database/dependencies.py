@@ -1,16 +1,18 @@
 # ---------------------------------------------------------------------------- #
 
 import fastapi
+import sqlmodel
+from typing import Annotated
 
 # ---------------------------------------------------------------------------- #
 
-from app.api.v1.endpoints import user_router
+from .database import database
 
 # ---------------------------------------------------------------------------- #
 
 
-router = fastapi.APIRouter(prefix="/api/v1", tags=["v1"])
-
-router.include_router(user_router)
+DatabaseDependency = Annotated[
+    sqlmodel.Session, fastapi.Depends(database.get_session)
+]
 
 # ---------------------------------------------------------------------------- #
