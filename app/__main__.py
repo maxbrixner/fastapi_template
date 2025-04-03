@@ -10,6 +10,8 @@ from starlette.exceptions import HTTPException as StarlettHTTPException
 
 from contextlib import asynccontextmanager
 
+from typing import AsyncGenerator
+
 # ---------------------------------------------------------------------------- #
 
 from app.core import config
@@ -29,7 +31,7 @@ config.load_configuration()
 
 
 @asynccontextmanager
-async def lifespan(app: fastapi.FastAPI):
+async def lifespan(app: fastapi.FastAPI) -> AsyncGenerator:
     """
     Context manager for FastAPI lifespan events. Handles application startup
     and shutdown logic.
@@ -88,7 +90,7 @@ app.include_router(routerv1)
 async def exception_handler(
     request: fastapi.Request,
     exception: Exception
-):
+) -> fastapi.responses.JSONResponse:
     logger.warning(f"Exception handled: {exception}")
     return fastapi.responses.JSONResponse(
         status_code=500,
@@ -104,7 +106,7 @@ async def exception_handler(
 async def http_exception_handler(
     request: fastapi.Request,
     exception: Exception
-):
+) -> fastapi.responses.JSONResponse:
     logger.warning(f"HTTP Exception handled: {exception}")
     return fastapi.responses.JSONResponse(
         status_code=500,
@@ -115,7 +117,10 @@ async def http_exception_handler(
 
 
 if __name__ == "__main__":
-    uvicorn.run(app="app.__main__:app", host=config.backend_host,
-                port=config.backend_port, reload=True)
+    host = config.backend_host
+    port = int(config.backend_port)
+
+    uvicorn.run(app="app.__main__:app", host=host,
+                port=port, reload=True)
 
 # ---------------------------------------------------------------------------- #

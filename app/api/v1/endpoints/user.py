@@ -1,6 +1,7 @@
 # ---------------------------------------------------------------------------- #
 
 import fastapi
+from typing import Dict
 
 # ---------------------------------------------------------------------------- #
 
@@ -18,7 +19,7 @@ router = fastapi.APIRouter(prefix="/user", tags=["user"])
 
 
 @router.get("/login")
-async def user_login():
+async def user_login() -> None:
     """
     Login a user.
     """
@@ -32,7 +33,7 @@ async def user_create(
     user: UserCreateSchema,
     session: DatabaseDependency,
     config: ConfigDependency
-):
+) -> Dict:
     """
     Create a new user.
     """

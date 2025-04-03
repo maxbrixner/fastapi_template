@@ -15,7 +15,7 @@ class Database():
     _logger: logging.Logger
     _engine: sqlalchemy.engine.base.Engine | None
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initialize the Database class.
         """

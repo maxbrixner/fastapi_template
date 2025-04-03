@@ -10,20 +10,20 @@ from app.schemas.user import *
 # ---------------------------------------------------------------------------- #
 
 
-def create_user(session: sqlmodel, user: UserCreateSchema) -> User:
+def create_user(session: sqlmodel.Session, user: UserCreateSchema) -> User:
     """
     Create a new user in the database.
     """
-    user = User(
+    database_user = User(
         username=user.username,
         email=user.email,
         password=user.password,
         disabled=False
     )
 
-    session.add(user)
+    session.add(database_user)
     session.commit()
-    session.refresh(user)
-    return user
+    session.refresh(database_user)
+    return database_user
 
 # ---------------------------------------------------------------------------- #
