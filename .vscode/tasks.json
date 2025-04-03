@@ -1,0 +1,12 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "linting",
+            "command": ".venv/bin/mypy --disallow-untyped-defs --disallow-incomplete-defs --disable-error-code=import-untyped app",
+            "problemMatcher": [],
+            "group": "test",
+        }
+    ]
+}
