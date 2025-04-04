@@ -1,5 +1,11 @@
 # FastAPI Sample App
 
+## Compile TS components
+
+```bash
+tsc frontend/components/input.ts --outDir frontend/static/
+```
+
 ## Run the App
 
 ```bash
