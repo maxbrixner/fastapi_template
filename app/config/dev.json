@@ -1,19 +1,24 @@
 {
-    "project_name": "my_project",
-    "project_description": "This is a sample project",
-    "project_version": "0.1.0",
-    "project_author": "John Doe",
-    "backend_host": "0.0.0.0",
-    "backend_port": 8000,
-    "cors_enabled": true,
-    "cors_allow_origins": [
-        "*"
-    ],
-    "cors_allow_credentials": true,
-    "cors_allow_methods": [
-        "*"
-    ],
-    "cors_allow_headers": [
-        "*"
-    ]
+    "project": {
+        "name": "Sample Project",
+        "description": "This is a sample project",
+        "version": "0.1.0",
+        "author": "John Doe"
+    },
+    "backend": {
+        "host": "0.0.0.0",
+        "port": 8000
+    },
+    "cors": {
+        "allow_origins": [
+            "*"
+        ],
+        "allow_credentials": true,
+        "allow_methods": [
+            "*"
+        ],
+        "allow_headers": [
+            "*"
+        ]
+    }
 }

@@ -10,27 +10,39 @@ from typing import List, Self
 # ---------------------------------------------------------------------------- #
 
 
+class _ProjectSchema(pydantic.BaseModel):
+    name: str
+    description: str
+    version: str
+    author: str
+
+
+class _BackendSchema(pydantic.BaseModel):
+    host: str
+    port: int
+
+
+class _CorsSchema(pydantic.BaseModel):
+    allow_origins: List[str]
+    allow_credentials: bool
+    allow_methods: List[str]
+    allow_headers: List[str]
+
+
+class _ConfigSchema(pydantic.BaseModel):
+    project: _ProjectSchema
+    backend: _BackendSchema
+    cors: _CorsSchema
+
+# ---------------------------------------------------------------------------- #
+
+
 class Configuration():
     """
     A simple configuration management class. The _ConfigSchema class
     defines the schema for the configuration file. The Configuration class
     loads the configuration file and provides access to its attributes.
     """
-    class _ConfigSchema(pydantic.BaseModel):
-        project_name: str
-        project_description: str
-        project_version: str
-        project_author: str
-
-        backend_host: str
-        backend_port: int
-
-        cors_enabled: bool
-        cors_allow_origins: List[str]
-        cors_allow_credentials: bool
-        cors_allow_methods: List[str]
-        cors_allow_headers: List[str]
-
     _logger: logging.Logger
     _config: _ConfigSchema | None
 
@@ -57,7 +69,7 @@ class Configuration():
 
         with config_file.open("r") as file:
             content = json.load(file)
-            self._config = self._ConfigSchema(**content)
+            self._config = _ConfigSchema(**content)
 
         self._logger.info(f"Application configuration loaded.")
 
@@ -106,7 +118,6 @@ class Configuration():
             raise AttributeError(f"Configuration has no attribute '{name}'.")
 
         return getattr(config, name)
-
 
 # ---------------------------------------------------------------------------- #
 

@@ -50,9 +50,9 @@ async def lifespan(app: fastapi.FastAPI) -> AsyncGenerator:
 
 
 app = fastapi.FastAPI(
-    title=config.project_name,
-    description=config.project_description,
-    version=config.project_version,
+    title=config.project.name,
+    description=config.project.description,
+    version=config.project.version,
     openapi_url=f"/openapi.json",
     docs_url="/docs",
     redoc_url=None,
@@ -62,22 +62,13 @@ app = fastapi.FastAPI(
 # ---------------------------------------------------------------------------- #
 
 
-if config.cors_enabled:
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=config.cors_allow_origins,
-        allow_credentials=config.cors_allow_credentials,
-        allow_methods=config.cors_allow_methods,
-        allow_headers=config.cors_allow_headers
-    )
-else:
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=config.cors.allow_origins,
+    allow_credentials=config.cors.allow_credentials,
+    allow_methods=config.cors.allow_methods,
+    allow_headers=config.cors.allow_headers
+)
 
 # ---------------------------------------------------------------------------- #
 
@@ -92,6 +83,9 @@ async def exception_handler(
     request: fastapi.Request,
     exception: Exception
 ) -> fastapi.responses.JSONResponse:
+    """
+    Exception handler for all unhandled exceptions.
+    """
     logger.warning(f"Exception handled: {exception}")
     return fastapi.responses.JSONResponse(
         status_code=500,
@@ -108,6 +102,9 @@ async def http_exception_handler(
     request: fastapi.Request,
     exception: Exception
 ) -> fastapi.responses.JSONResponse:
+    """
+    Exception handler for all unhandled http exceptions.
+    """
     logger.warning(f"HTTP Exception handled: {exception}")
     return fastapi.responses.JSONResponse(
         status_code=500,
@@ -118,8 +115,12 @@ async def http_exception_handler(
 
 
 if __name__ == "__main__":
-    host = config.backend_host
-    port = int(config.backend_port)
+    """
+    Main entry point for the application. Loads the configuration and starts
+    the application server.
+    """
+    host = config.backend.host
+    port = int(config.backend.port)
 
     uvicorn.run(app="app.__main__:app", host=host,
                 port=port, reload=True)

@@ -4,7 +4,7 @@ import sqlmodel
 
 # ---------------------------------------------------------------------------- #
 
-from app.models.user import User
+from app.models.user import *
 from app.schemas.user import *
 
 # ---------------------------------------------------------------------------- #
