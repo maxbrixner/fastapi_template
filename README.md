@@ -1,4 +1,4 @@
-# Playground
+# FastAPI Sample App
 
 ## Run the App
 
