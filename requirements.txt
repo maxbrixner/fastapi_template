@@ -1,4 +1,6 @@
 fastapi
+httpx
+mypy
 pydantic
 pydantic[email]
 sqlmodel
