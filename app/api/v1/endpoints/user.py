@@ -31,8 +31,7 @@ async def user_login() -> None:
 @router.post("/create")
 async def user_create(
     user: UserCreateSchema,
-    session: DatabaseDependency,
-    config: ConfigDependency
+    session: DatabaseDependency
 ) -> Dict:
     """
     Create a new user.
