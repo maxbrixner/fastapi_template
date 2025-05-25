@@ -3,7 +3,13 @@
 import sqlalchemy
 import sqlmodel
 import logging
+import re
+import os
 from typing import Generator
+
+# ---------------------------------------------------------------------------- #
+
+from app.core import config
 
 # ---------------------------------------------------------------------------- #
 
@@ -25,9 +31,16 @@ class Database():
     def connect(self) -> None:
         """
         Connect to the database. This method creates a new database engine
-        and initializes the database schema.
+        and initializes the database schema. The  database URL is obtained
+        from the configuration. The URL may contain environment variable
+        placeholders in the format {{VAR_NAME}} where VAR_NAME is the name
+        of the environment variable to be replaced with its value.
         """
-        self._engine = sqlmodel.create_engine("sqlite:///database.db")
+        self._engine = sqlmodel.create_engine(
+            url=self._get_database_url(),
+            echo=config.database.echo,
+            pool_size=config.database.pool_size,
+            max_overflow=config.database.max_overflow)
         sqlmodel.SQLModel.metadata.create_all(self._engine)
         self._logger.info("Database connection established.")
 
@@ -53,6 +66,30 @@ class Database():
             yield session
 
         self._logger.debug("Database session closed.")
+
+    def _get_database_url(self) -> str:
+        """
+        Get the database URL from the configuration. Replace any
+        environment variable placeholders in the URL with their values.
+        If an environment variable is not set, raise an exception. Placeholders
+        are in the format {{VAR_NAME}} where VAR_NAME is the name of the
+        environment variable to be replaced.
+        """
+        url = config.database.url
+
+        def replace_env_var(match):
+            """
+            Replace environment variable placeholders in the URL.
+            """
+            name = match.group(1)
+            value = os.getenv(name, default=None)
+            if value is None:
+                raise Exception(f"Environment variable '{name}' not set. "
+                                f"The database URL cannot be constructed.")
+            return value
+
+        url = re.sub(r"{{(\w+)}}", replace_env_var, url)
+        return url
 
 # ---------------------------------------------------------------------------- #
 

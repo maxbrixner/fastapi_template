@@ -10,6 +10,13 @@ from typing import Any, List, Self
 # ---------------------------------------------------------------------------- #
 
 
+class _DatabaseSchema(pydantic.BaseModel):
+    url: str
+    echo: bool = False
+    pool_size: int = 5
+    max_overflow: int = 10
+
+
 class _ProjectSchema(pydantic.BaseModel):
     name: str
     description: str
@@ -18,21 +25,22 @@ class _ProjectSchema(pydantic.BaseModel):
 
 
 class _BackendSchema(pydantic.BaseModel):
-    host: str
-    port: int
+    host: str = "0.0.0.0"
+    port: int = 8000
 
 
 class _CorsSchema(pydantic.BaseModel):
-    allow_origins: List[str]
-    allow_credentials: bool
-    allow_methods: List[str]
-    allow_headers: List[str]
+    allow_origins: List[str] = ["*"]
+    allow_credentials: bool = True
+    allow_methods: List[str] = ["*"]
+    allow_headers: List[str] = ["*"]
 
 
 class _ConfigSchema(pydantic.BaseModel):
-    project: _ProjectSchema
     backend: _BackendSchema
     cors: _CorsSchema
+    database: _DatabaseSchema
+    project: _ProjectSchema
 
 # ---------------------------------------------------------------------------- #
 
