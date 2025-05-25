@@ -1,25 +1,45 @@
 # ---------------------------------------------------------------------------- #
 
-import unittest
-from fastapi import FastAPI
-from fastapi.testclient import TestClient
-
-# ---------------------------------------------------------------------------- #
-
-from app import app
+from test.testcase import TestCase
 
 # ---------------------------------------------------------------------------- #
 
 
-class APITestCase(unittest.TestCase):
-    def setUp(self):
-        self.client = TestClient(app)
-        self.api_version = "/api/v1"
+class TestV1API(TestCase):
+    """
+    Test cases for the v1 API endpoints.
+    """
+    @classmethod
+    def setUpClass(cls) -> None:
+        """
+        This runs once before all tests to set up the API version for
+        all tests in this class.
+        """
+        super().setUpClass()
+        cls.api_version = "/api/v1"
 
-    def test_health(self):
+    def test_health(self) -> None:
+        """
+        Test the health endpoint to ensure the API is running and healthy.
+        """
         response = self.client.get(f"{self.api_version}/utils/health")
         assert response.status_code == 200
         assert response.json()["health"] == "healthy"
 
+    def test_user_create(self) -> None:
+        """
+        Test the user creation endpoint to ensure a user can be created
+        successfully.
+        """
+        response = self.client.post(
+            f"{self.api_version}/user/create",
+            json={
+                "username": "testuser",
+                "email": "test@example.com",
+                "password": "testpassword"
+            }
+        )
+        assert response.status_code == 200
+        assert "message" in response.json()
 
 # ---------------------------------------------------------------------------- #

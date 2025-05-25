@@ -77,7 +77,7 @@ class Database():
         """
         url = config.database.url
 
-        def replace_env_var(match):
+        def replace_env_var(match: re.Match) -> str:
             """
             Replace environment variable placeholders in the URL.
             """
