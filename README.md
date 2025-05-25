@@ -3,7 +3,7 @@
 ## Compile TS components
 
 ```bash
-tsc frontend/components/input.ts --outDir frontend/static/
+tsc
 ```
 
 ## Run the App
