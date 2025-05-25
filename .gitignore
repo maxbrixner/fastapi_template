@@ -1,5 +1,9 @@
 .venv
+.env
+
 __pycache__
 .mypy_cache
-database.db
+
+*.db
+
 frontend/static/*.js
