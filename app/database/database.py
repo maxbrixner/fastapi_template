@@ -10,7 +10,7 @@ from typing import Generator
 
 class Database():
     """
-    Simple class for managing database connections.
+    Simple class for managing database connections using sqlmodel.
     """
     _logger: logging.Logger
     _engine: sqlalchemy.engine.base.Engine | None

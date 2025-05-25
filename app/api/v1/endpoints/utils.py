@@ -4,7 +4,7 @@ import fastapi
 
 # ---------------------------------------------------------------------------- #
 
-from app.schemas.utils import HealthSchema
+from app.schemas.utils import HealthSchema, HealthEnum
 
 # ---------------------------------------------------------------------------- #
 
@@ -20,7 +20,7 @@ async def utils_health() -> HealthSchema:
     Return the health of the api.
     """
     return HealthSchema(
-        health="healthy",
+        health=HealthEnum.HEALTHY,
         message="API is healthy",
     )
 

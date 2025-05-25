@@ -5,7 +5,7 @@ import pathlib
 import os
 import json
 import logging
-from typing import List, Self
+from typing import Any, List, Self
 
 # ---------------------------------------------------------------------------- #
 
@@ -99,7 +99,7 @@ class Configuration():
         """
         return self
 
-    def __getattr__(self, name: str) -> str:
+    def __getattr__(self, name: str) -> Any:
         """
         Get an attribute of the configuration.
         """
