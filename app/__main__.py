@@ -1,7 +1,6 @@
 # ---------------------------------------------------------------------------- #
 
 import fastapi
-import uvicorn
 import logging
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -134,6 +133,8 @@ if __name__ == "__main__":
     Main entry point for the application. Loads the configuration and starts
     the application server.
     """
+    import uvicorn
+
     config.load_configuration()
 
     host = config.backend.host

@@ -49,7 +49,7 @@ python -m app
 - Using Uvicorn:
 
 ```bash
-uvicorn app.__main__:app --reload --host 0.0.0.0 --port 8000
+uvicorn --factory app:create_app --reload --host 0.0.0.0 --port 8000
 ```
 
 - In Visual Studio Code:

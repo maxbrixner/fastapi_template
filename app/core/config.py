@@ -1,10 +1,11 @@
 # ---------------------------------------------------------------------------- #
 
+import logging
+import logging.config
 import pydantic
 import pathlib
 import os
 import json
-import logging
 from typing import Any, List, Optional, Self
 
 # ---------------------------------------------------------------------------- #
