@@ -36,8 +36,8 @@ class TestCase(unittest.TestCase):
         an in-memory SQLite database for testing. This runs once before all
         tests.
         """
-        os.environ["CONFIG"] = "config.dev.json"
-        os.environ["LOGGING"] = "logging.dev.json"
+        os.environ["CONFIG"] = "config.test.json"
+        os.environ["LOGGING"] = "logging.test.json"
 
         cls.app = create_app()
 
