@@ -53,6 +53,7 @@ app = fastapi.FastAPI(
     title=config.project.name,
     description=config.project.description,
     version=config.project.version,
+    root_path=config.backend.root_path,
     openapi_url=f"/openapi.json",
     docs_url="/docs",
     redoc_url=None,

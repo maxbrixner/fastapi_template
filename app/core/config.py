@@ -5,7 +5,7 @@ import pathlib
 import os
 import json
 import logging
-from typing import Any, List, Self
+from typing import Any, List, Optional, Self
 
 # ---------------------------------------------------------------------------- #
 
@@ -27,6 +27,7 @@ class _ProjectSchema(pydantic.BaseModel):
 class _BackendSchema(pydantic.BaseModel):
     host: str = "0.0.0.0"
     port: int = 8000
+    root_path: Optional[str] = None
 
 
 class _CorsSchema(pydantic.BaseModel):
