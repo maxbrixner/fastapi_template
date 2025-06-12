@@ -4,7 +4,7 @@ A sample project demonstrating a FastAPI backend with TypeScript-based web compo
 
 ## Getting Started 🚀
 
-### 1. Setup Environment 🛠️
+### 1. Setup Environment
 
 Create a virtual environment:
 
@@ -14,13 +14,19 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+Enable the GIT hooks:
+
+```bash
+git config core.hooksPath .githooks
+```
+
 Create an env-file:
 
 ```bash
 cp .env.example .env
 ```
 
-### 2. Compile TypeScript Components 🖥️
+### 2. Compile TypeScript Components
 
 Compile the TypeScript components for the frontend:
 
@@ -30,7 +36,7 @@ tsc -p ./frontend/
 
 Or, in Visual Studio Code, press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd> to build.
 
-### 3. Run the FastAPI App 🏃
+### 3. Run the FastAPI App
 
 You can start the FastAPI server in several ways:
 

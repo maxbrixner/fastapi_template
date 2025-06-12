@@ -7,7 +7,8 @@
             "request": "launch",
             "module": "uvicorn",
             "args": [
-                "app.__main__:app",
+                "--factory",
+                "app:create_app",
                 "--reload",
                 "--host",
                 "0.0.0.0",

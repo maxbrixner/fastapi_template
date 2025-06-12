@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# ---------------------------------------------------------------------------- #
+# pre-commit hook to prevent committing sensitive files
+# ---------------------------------------------------------------------------- #
+
+# Define an array of files that should never be committed
+FORBIDDEN_FILES=(
+    ".env"
+    ".env.local"
+    ".env.development.local"
+    ".env.test.local"
+    ".env.production.local"
+    "secrets.js"
+    "config.ini"
+    "credentials.json"
+    "id_rsa"
+    "id_dsa"
+    "private.key"
+    "aws_access_key_id"
+    "aws_secret_access_key"
+    "terraform.tfvars"
+)
+
+# Loop through all files that are staged for commit
+for FILE in $(git diff --cached --name-only); do
+    FILENAME=$(basename "$FILE")
+    # Check if the base filename (e.g., .env) is in our forbidden list
+    for FORBIDDEN in "${FORBIDDEN_FILES[@]}"; do
+        if [[ "$FILENAME" == "$FORBIDDEN" ]]; then
+            echo -e "\e[1;31mERROR: Detected potentially sensitive file in commit: '$FILE'\e[0m"
+            echo -e "\e[1;31mPlease remove it from staging before committing.\e[0m"
+            echo ""
+            echo "If this is intended, you can bypass the hook with 'git commit --no-verify'."
+            exit 1 # Abort the commit
+        fi
+    done
+done
+
+# ---------------------------------------------------------------------------- #
+# pre-commit hook to run mypy for type checking
+# ---------------------------------------------------------------------------- #
+
+.venv/bin/mypy --disallow-untyped-defs --disallow-incomplete-defs --disable-error-code=import-untyped app test
+
+if [ $? -ne 0 ]; then
+	echo -e "ERROR: Linting failed. Please fix the issues before committing."
+    echo ""
+    echo "If this is intended, you can bypass the hook with 'git commit --no-verify'."
+	exit 1 # Abort the commit
+fi
+
+# ---------------------------------------------------------------------------- #
+# pre-commit hook to run unit tests
+# ---------------------------------------------------------------------------- #
+
+.venv/bin/python -m unittest discover --failfast --verbose --start-directory ./test --pattern "*_test.py"
+
+if [ $? -ne 0 ]; then
+	echo -e "ERROR: At least one unit test failed. Please fix the issues before committing."
+    echo ""
+    echo "If this is intended, you can bypass the hook with 'git commit --no-verify'."
+	exit 1 # Abort the commit
+fi
+
+exit 0 # Allow the commit to proceed
