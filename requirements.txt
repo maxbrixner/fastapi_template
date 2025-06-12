@@ -3,5 +3,6 @@ httpx>=0.28.1
 mypy>=1.15.0
 pydantic>=2.11.5
 pydantic[email]>=2.11.5
+python-multipart>=0.0.20
 sqlmodel>=0.0.24
 uvicorn>=0.34.2
