@@ -35,6 +35,8 @@ class _CorsSchema(pydantic.BaseModel):
     allow_credentials: bool = True
     allow_methods: List[str] = ["*"]
     allow_headers: List[str] = ["*"]
+    expose_headers: List[str] = []
+    max_age: Optional[int] = 600
 
 
 class _ConfigSchema(pydantic.BaseModel):
