@@ -68,9 +68,11 @@ class DatabaseTest(TestCase):
             database = get_database()
             database.connect()
 
-        assert database._engine is not None
-        assert isinstance(database._engine, sqlalchemy.engine.base.Engine)
-        mock_create_engine.assert_called_once()
+            assert database._engine is not None
+            assert isinstance(database._engine, sqlalchemy.engine.base.Engine)
+            mock_create_engine.assert_called_once()
+
+            database.disconnect()
 
     def test_disconnect(self) -> None:
         """
@@ -121,8 +123,10 @@ class DatabaseTest(TestCase):
 
             session = database.get_session()
 
-        assert isinstance(session, Generator)
-        assert isinstance(session.__next__(), sqlmodel.Session)
+            assert isinstance(session, Generator)
+            assert isinstance(session.__next__(), sqlmodel.Session)
+
+            database.disconnect()
 
     def test_get_database_url(self) -> None:
         """
@@ -146,5 +150,8 @@ class DatabaseTest(TestCase):
                 url = database._resolve_url(
                     url="sqlite:///{{VAR1}}:{{VAR3}}.db"
                 )
+
+            database.disconnect()
+
 
 # ---------------------------------------------------------------------------- #
