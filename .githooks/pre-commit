@@ -41,7 +41,7 @@ done
 # pre-commit hook to run mypy for type checking
 # ---------------------------------------------------------------------------- #
 
-MYPY_OUTPUT=$(.venv/bin/mypy --disallow-untyped-defs --disallow-incomplete-defs --disable-error-code=import-untyped app test)
+MYPY_OUTPUT=$(.venv/bin/mypy --disallow-untyped-defs --disallow-incomplete-defs --disable-error-code=import-untyped app test > /dev/null 2>&1)
 MYPY_EXIT_CODE=$?
 
 if [ $MYPY_EXIT_CODE -ne 0 ]; then
@@ -55,7 +55,7 @@ fi
 # pre-commit hook to run unit tests
 # ---------------------------------------------------------------------------- #
 
-UNITTEST_OUTPUT=$(.venv/bin/python -m unittest discover --failfast --verbose --start-directory ./test --pattern "*_test.py")
+UNITTEST_OUTPUT=$(.venv/bin/python -m unittest discover --failfast --verbose --start-directory ./test --pattern "*_test.py" > /dev/null 2>&1)
 UNITTEST_EXIT_CODE=$?
 
 if [ $UNITTEST_EXIT_CODE -ne 0 ]; then
