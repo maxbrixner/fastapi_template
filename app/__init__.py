@@ -1,1 +1,1 @@
-from .__main__ import create_app
+from app.core import create_app

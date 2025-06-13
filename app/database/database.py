@@ -9,7 +9,7 @@ from typing import Generator
 
 # ---------------------------------------------------------------------------- #
 
-from app.core import config
+from app.core.config import config
 
 # ---------------------------------------------------------------------------- #
 
