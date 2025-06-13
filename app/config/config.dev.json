@@ -27,7 +27,7 @@
         "max_overflow": 10
     },
     "project": {
-        "name": "Sample Project",
+        "title": "Sample Project",
         "description": "This is a sample project",
         "version": "0.1.0",
         "author": "John Doe"

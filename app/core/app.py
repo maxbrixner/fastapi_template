@@ -30,7 +30,7 @@ def create_app() -> fastapi.FastAPI:
     config = get_configuration()
 
     app = fastapi.FastAPI(
-        title=config.project.name,
+        title=config.project.title,
         description=config.project.description,
         version=config.project.version,
         root_path=config.backend.root_path,

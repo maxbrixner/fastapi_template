@@ -23,7 +23,7 @@ class _DatabaseSchema(pydantic.BaseModel):
 
 
 class _ProjectSchema(pydantic.BaseModel):
-    name: str = "Blank Name"
+    title: str = "Blank Title"
     description: str = "Blank Description"
     version: str = "0.1.0"
     author: str = "Blank Author"
