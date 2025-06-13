@@ -6,7 +6,6 @@ import fastapi
 
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import HTTPException
-from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarlettHTTPException
 
 # ---------------------------------------------------------------------------- #
@@ -36,7 +35,7 @@ def create_app() -> fastapi.FastAPI:
         version=config.project.version,
         root_path=config.backend.root_path,
         openapi_url=f"/openapi.json",
-        docs_url="/docs",
+        docs_url=config.project.swagger_path,
         redoc_url=None,
         lifespan=lifespan
     )
@@ -53,12 +52,17 @@ def create_app() -> fastapi.FastAPI:
         )
 
     if config.static_files.enabled:
+        from app.services.static import StaticFilesWithHeaders
         app.mount(
             config.static_files.path,
-            StaticFiles(
+            StaticFilesWithHeaders(
                 directory=config.static_files.directory),
             name=config.static_files.name
         )
+
+    if config.templates.enabled:
+        from app.services import TemplateHeaderMiddleware
+        app.add_middleware(TemplateHeaderMiddleware)
 
     app.include_router(routerv1)
 

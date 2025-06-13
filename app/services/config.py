@@ -5,7 +5,7 @@ import pydantic
 import pathlib
 import os
 import json
-from typing import List, Optional
+from typing import Dict, List, Optional
 from functools import lru_cache
 
 # ---------------------------------------------------------------------------- #
@@ -27,6 +27,7 @@ class _ProjectSchema(pydantic.BaseModel):
     description: str = "blank"
     title: str = "blank"
     version: str = "blank"
+    swagger_path: Optional[str] = "/docs"
 
 
 class _BackendSchema(pydantic.BaseModel):
@@ -48,6 +49,7 @@ class _CorsSchema(pydantic.BaseModel):
 class _StaticFilesSchema(pydantic.BaseModel):
     directory: str = "static"
     enabled: bool = False
+    headers: Dict[str, str] = {}
     name: str = "static"
     path: str = "/static"
 
@@ -55,6 +57,7 @@ class _StaticFilesSchema(pydantic.BaseModel):
 class _TemplatesSchema(pydantic.BaseModel):
     directory: str = "templates"
     enabled: bool = False
+    headers: Dict[str, str] = {}
 
 
 class ConfigSchema(pydantic.BaseModel):

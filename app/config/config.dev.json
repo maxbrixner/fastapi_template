@@ -31,15 +31,35 @@
         "title": "Sample Project",
         "description": "This is a sample project",
         "version": "0.1.0",
-        "author": "John Doe"
+        "author": "John Doe",
+        "swagger_path": "/docs"
     },
     "static_files": {
         "enabled": true,
+        "headers": {
+            "X-Content-Type-Options": "nosniff",
+            "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self';",
+            "Referrer-Policy": "strict-origin-when-cross-origin",
+            "Cross-Origin-Resource-Policy": "same-origin",
+            "Cache-Control": "public, max-age=3600"
+        },
         "path": "/static",
         "directory": "frontend/static",
         "name": "static"
     },
     "templates": {
-        "directory": "frontend/templates"
+        "enabled": true,
+        "directory": "frontend/templates",
+        "headers": {
+            "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+            "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self';",
+            "X-Content-Type-Options": "nosniff",
+            "X-Frame-Options": "DENY",
+            "Referrer-Policy": "strict-origin-when-cross-origin",
+            "Permissions-Policy": "geolocation=(), camera=(), microphone=(), fullscreen=(self)",
+            "Cache-Control": "no-cache",
+            "Cross-Origin-Opener-Policy": "same-origin",
+            "Cross-Origin-Embedder-Policy": "require-corp"
+        }
     }
 }
