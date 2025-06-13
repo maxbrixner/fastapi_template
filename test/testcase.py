@@ -20,7 +20,7 @@ from app.services import get_configuration, ConfigSchema
 # ---------------------------------------------------------------------------- #
 
 
-class TestCase(unittest.TestCase):
+class TestCase(unittest.IsolatedAsyncioTestCase):
     """
     Base test case class for setting up a FastAPI test client and an
     in-memory SQLite database for testing. This class provides setup and
@@ -41,7 +41,8 @@ class TestCase(unittest.TestCase):
         """
         Set up the test case by creating a FastAPI test client and initializing
         an in-memory SQLite database for testing. This runs once before all
-        tests.
+        tests. During this setup, the configuration and logger are mocked
+        to avoid external dependencies and ensure a controlled environment.
         """
         with patch('app.core.app.get_configuration') as mock_config:
             mock_config.return_value = ConfigSchema()

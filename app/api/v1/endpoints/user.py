@@ -17,7 +17,7 @@ router = fastapi.APIRouter(prefix="/user", tags=["user"])
 # ---------------------------------------------------------------------------- #
 
 
-@router.get("/login")
+@router.post("/login")
 async def user_login() -> None:
     """
     Login a user.

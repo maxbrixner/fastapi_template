@@ -42,7 +42,7 @@ async def http_exception_handler(
     if hasattr(exception, 'status_code'):
         status_code = exception.status_code
     else:
-        status_code = fastapi.status.HTTP_500_INTERNAL_SERVER_ERROR,
+        status_code = fastapi.status.HTTP_500_INTERNAL_SERVER_ERROR
 
     return fastapi.responses.JSONResponse(
         content={"detail": str(exception.detail) if hasattr(

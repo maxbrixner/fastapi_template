@@ -53,6 +53,7 @@ def create_app() -> fastapi.FastAPI:
     app.include_router(routerv1)
 
     app.add_exception_handler(Exception, exception_handler)
+    app.add_exception_handler(NotImplementedError, exception_handler)
     app.add_exception_handler(HTTPException, http_exception_handler)
     app.add_exception_handler(StarlettHTTPException, http_exception_handler)
 
