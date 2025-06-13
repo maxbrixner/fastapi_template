@@ -52,12 +52,18 @@ class _StaticFilesSchema(pydantic.BaseModel):
     path: str = "/static"
 
 
+class _TemplatesSchema(pydantic.BaseModel):
+    directory: str = "templates"
+    enabled: bool = False
+
+
 class ConfigSchema(pydantic.BaseModel):
     backend: _BackendSchema = _BackendSchema()
     cors: _CorsSchema = _CorsSchema()
     database: _DatabaseSchema = _DatabaseSchema()
     project: _ProjectSchema = _ProjectSchema()
     static_files: _StaticFilesSchema = _StaticFilesSchema()
+    templates: _TemplatesSchema = _TemplatesSchema()
 
 # ---------------------------------------------------------------------------- #
 
