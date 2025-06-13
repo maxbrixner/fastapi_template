@@ -63,7 +63,7 @@ class LoggingTest(TestCase):
                 patch("logging.config.dictConfig")
             )
 
-            config = setup_logger()
+            setup_logger()
             mock_file.assert_called_once()
             mock_logger.assert_called_once()
 
