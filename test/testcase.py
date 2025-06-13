@@ -33,6 +33,7 @@ class TestCase(unittest.TestCase):
     api_version: str
 
     config_patcher: unittest.mock._patch
+    db_config_patcher: unittest.mock._patch
     logging_patcher: unittest.mock._patch
 
     @classmethod
@@ -42,15 +43,10 @@ class TestCase(unittest.TestCase):
         an in-memory SQLite database for testing. This runs once before all
         tests.
         """
-        cls.config_patcher = patch(
-            'app.core.app.get_configuration', return_value=ConfigSchema())
-        cls.config_patcher.start()
-
-        cls.logging_patcher = patch(
-            'app.core.app.setup_logger')
-        cls.logging_patcher.start()
-
-        cls.app = create_app()
+        with patch('app.core.app.get_configuration') as mock_config:
+            mock_config.return_value = ConfigSchema()
+            with patch('app.core.app.setup_logger') as mock_logger:
+                cls.app = create_app()
 
         cls.client = TestClient(cls.app)
 
@@ -94,15 +90,5 @@ class TestCase(unittest.TestCase):
         self.session.close()
         self.app.dependency_overrides.pop(Database.get_session, None)
         self.app.dependency_overrides.pop(get_configuration, None)
-
-    @classmethod
-    def tearDownClass(cls) -> None:
-        """
-        Clean up the test case by closing the session and removing the
-        dependency override after each test.
-        """
-        cls.config_patcher.stop()
-        cls.logging_patcher.stop()
-        super().tearDownClass()
 
 # ---------------------------------------------------------------------------- #

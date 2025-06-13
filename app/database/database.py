@@ -31,9 +31,15 @@ class Database():
         Initialize the Database class.
         """
         self._engine = None
-        self._config = get_configuration()
+        self._config = self.get_configuration()
 
         logger.info("Database initialized.")
+
+    def get_configuration(self) -> ConfigSchema:
+        """
+        Get the configuration for the database.
+        """
+        return get_configuration()
 
     def connect(self) -> None:
         """
