@@ -1,29 +1,56 @@
 # ---------------------------------------------------------------------------- #
 
 import fastapi
-from unittest.mock import patch
 from fastapi.exceptions import HTTPException
+from unittest.mock import patch
+from contextlib import ExitStack
 
 # ---------------------------------------------------------------------------- #
 
+from app.services import ConfigSchema
 from app.core.exceptions import exception_handler, http_exception_handler
-from test.testcase import TestCase
+from test._testcase import TestCase
 
 # ---------------------------------------------------------------------------- #
 
 
-class TestBase(TestCase):
+class TestLifespan(TestCase):
     """
-    Test cases for base functions like lifespan events or config/logging.
+    Test cases for the lifspan events.
     """
-    @classmethod
-    def setUpClass(cls) -> None:
+
+    def test_lifespan(self) -> None:
         """
-        This runs once before all tests to set up the API version for
-        all tests in this class.
+        Test if the lifespan connects and disconnects the database.
         """
-        super().setUpClass()
-        cls.api_version = "/api/v1"
+        with ExitStack() as stack:
+            mock_config = stack.enter_context(
+                patch('app.database.Database.get_configuration',
+                      return_value=ConfigSchema())
+            )
+            mock_connect = stack.enter_context(
+                patch('app.database.Database.connect')
+            )
+            mock_disconnect = stack.enter_context(
+                patch('app.database.Database.disconnect')
+            )
+            mock_config.return_value = ConfigSchema()
+
+            with self.client:
+                response = self.client.get(
+                    f"{self.api_version}/test/fake-route")
+
+            assert mock_connect.called
+            assert mock_disconnect.called
+            assert response.status_code == fastapi.status.HTTP_404_NOT_FOUND
+
+# ---------------------------------------------------------------------------- #
+
+
+class TestExceptions(TestCase):
+    """
+    Test cases for exception handlers in the API.
+    """
 
     async def test_exception_handler(self) -> None:
         """
@@ -66,7 +93,7 @@ class TestBase(TestCase):
         """
         Test that an invalid route returns a handled error.
         """
-        response = self.client.get(f"{self.api_version}/test/fake-route")
+        response = self.client.get(f"/test/fake-route")
         assert response.status_code == fastapi.status.HTTP_404_NOT_FOUND
         assert "detail" in response.json()
 

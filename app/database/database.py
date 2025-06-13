@@ -50,7 +50,7 @@ class Database():
         of the environment variable to be replaced with its value.
         """
         self._engine = sqlmodel.create_engine(
-            url=self._get_database_url(),
+            url=self._resolve_url(url=self._config.database.url),
             echo=self._config.database.echo,
             pool_size=self._config.database.pool_size,
             max_overflow=self._config.database.max_overflow)
@@ -80,7 +80,7 @@ class Database():
 
         logger.debug("Database session closed.")
 
-    def _get_database_url(self) -> str:
+    def _resolve_url(self, url: str) -> str:
         """
         Get the database URL from the configuration. Replace any
         environment variable placeholders in the URL with their values.
@@ -88,8 +88,6 @@ class Database():
         are in the format {{VAR_NAME}} where VAR_NAME is the name of the
         environment variable to be replaced.
         """
-        url = self._config.database.url
-
         def replace_env_var(match: re.Match) -> str:
             """
             Replace environment variable placeholders in the URL.

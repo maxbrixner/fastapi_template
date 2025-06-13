@@ -4,11 +4,9 @@ import unittest
 import sqlmodel
 import sqlmodel.pool
 import sqlalchemy
-
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from unittest.mock import patch
-
 from typing import Generator
 
 # ---------------------------------------------------------------------------- #
