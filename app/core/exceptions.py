@@ -1,4 +1,3 @@
-
 # ---------------------------------------------------------------------------- #
 
 import fastapi
@@ -19,9 +18,9 @@ async def exception_handler(
     Exception handler for all unhandled exceptions.
     """
     logger.warning(
-        f"Exception handled: '{exception}' for url '{request.url}'.")
+        f"Exception for url '{request.url}' handled:\n'{exception}'")
     return fastapi.responses.JSONResponse(
-        status_code=500,
+        status_code=fastapi.status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={"detail": "Internal Server Error"},
         headers=None
     )
@@ -39,13 +38,18 @@ async def http_exception_handler(
     """
     logger.warning(
         f"HTTP Exception handled: '{exception}' for url '{request.url}'.")
+
+    if hasattr(exception, 'status_code'):
+        status_code = exception.status_code
+    else:
+        status_code = fastapi.status.HTTP_500_INTERNAL_SERVER_ERROR,
+
     return fastapi.responses.JSONResponse(
-        status_code=exception.status_code if hasattr(
-            exception, 'status_code') else 500,
         content={"detail": str(exception.detail) if hasattr(
             exception, 'detail') else "An error occurred"},
         headers=exception.headers if hasattr(
-            exception, 'headers') else None
+            exception, 'headers') else None,
+        status_code=status_code
     )
 
 # ---------------------------------------------------------------------------- #
