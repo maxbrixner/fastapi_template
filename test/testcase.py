@@ -4,16 +4,18 @@ import unittest
 import sqlmodel
 import sqlmodel.pool
 import sqlalchemy
-import os
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from unittest.mock import patch
 
+from typing import Generator
+
 # ---------------------------------------------------------------------------- #
 
 from app import create_app
-from app.database import database
+from app.database import get_database_session, Database
+from app.services import get_configuration, ConfigSchema
 
 # ---------------------------------------------------------------------------- #
 
@@ -27,7 +29,11 @@ class TestCase(unittest.TestCase):
     app: FastAPI
     client: TestClient
     engine: sqlalchemy.engine.base.Engine
+    session: sqlmodel.Session
     api_version: str
+
+    config_patcher: unittest.mock._patch
+    logging_patcher: unittest.mock._patch
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -36,8 +42,13 @@ class TestCase(unittest.TestCase):
         an in-memory SQLite database for testing. This runs once before all
         tests.
         """
-        os.environ["CONFIG"] = "config.test.json"
-        os.environ["LOGGING"] = "logging.test.json"
+        cls.config_patcher = patch(
+            'app.core.app.get_configuration', return_value=ConfigSchema())
+        cls.config_patcher.start()
+
+        cls.logging_patcher = patch(
+            'app.core.app.setup_logger')
+        cls.logging_patcher.start()
 
         cls.app = create_app()
 
@@ -61,12 +72,19 @@ class TestCase(unittest.TestCase):
 
         self.session = sqlmodel.Session(self.engine)
 
-        def get_session_override() -> sqlmodel.Session:
-            return self.session
+        def get_session_override() -> Generator[sqlmodel.Session]:
+            yield self.session
+
+        def get_config_override() -> ConfigSchema:
+            return ConfigSchema()
 
         self.app.dependency_overrides[
-            database.get_session
+            get_database_session
         ] = get_session_override
+
+        self.app.dependency_overrides[
+            get_configuration
+        ] = get_config_override
 
     def tearDown(self) -> None:
         """
@@ -74,6 +92,17 @@ class TestCase(unittest.TestCase):
         dependency override after each test.
         """
         self.session.close()
-        self.app.dependency_overrides.pop(database.get_session, None)
+        self.app.dependency_overrides.pop(Database.get_session, None)
+        self.app.dependency_overrides.pop(get_configuration, None)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        """
+        Clean up the test case by closing the session and removing the
+        dependency override after each test.
+        """
+        cls.config_patcher.stop()
+        cls.logging_patcher.stop()
+        super().tearDownClass()
 
 # ---------------------------------------------------------------------------- #

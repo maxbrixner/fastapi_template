@@ -10,7 +10,7 @@ from typing import AsyncGenerator
 
 # ---------------------------------------------------------------------------- #
 
-from app.database import database
+from app.database import get_database
 
 # ---------------------------------------------------------------------------- #
 
@@ -25,6 +25,8 @@ async def lifespan(app: fastapi.FastAPI) -> AsyncGenerator:
     Context manager for FastAPI lifespan events. Handles application startup
     and shutdown logic.
     """
+    database = get_database()
+
     database.connect()
 
     logger.info("Application startup complete.")

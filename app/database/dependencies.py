@@ -6,13 +6,13 @@ from typing import Annotated
 
 # ---------------------------------------------------------------------------- #
 
-from .database import database
+from .database import get_database_session
 
 # ---------------------------------------------------------------------------- #
 
 
 DatabaseDependency = Annotated[
-    sqlmodel.Session, fastapi.Depends(database.get_session)
+    sqlmodel.Session, fastapi.Depends(get_database_session)
 ]
 
 # ---------------------------------------------------------------------------- #

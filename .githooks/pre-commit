@@ -41,12 +41,13 @@ done
 # pre-commit hook to run mypy for type checking
 # ---------------------------------------------------------------------------- #
 
-MYPY_OUTPUT=$(.venv/bin/mypy --disallow-untyped-defs --disallow-incomplete-defs --disable-error-code=import-untyped app test > /dev/null 2>&1)
+MYPY_OUTPUT=$(.venv/bin/mypy --disallow-untyped-defs --disallow-incomplete-defs --disable-error-code=import-untyped app test)
 MYPY_EXIT_CODE=$?
 
 if [ $MYPY_EXIT_CODE -ne 0 ]; then
 	echo -e "ERROR: Linting failed. Please fix the issues before committing."
     echo -e "If this is intended, you can bypass the hook with 'git commit --no-verify'."
+    echo -e $MYPY_OUTPUT
 	exit 1
 fi
 
@@ -54,12 +55,13 @@ fi
 # pre-commit hook to run unit tests
 # ---------------------------------------------------------------------------- #
 
-UNITTEST_OUTPUT=$(.venv/bin/python -m unittest discover --failfast --verbose --start-directory ./test --pattern "*_test.py" > /dev/null 2>&1)
+UNITTEST_OUTPUT=$(.venv/bin/python -m unittest discover --failfast --verbose --start-directory ./test --pattern "*_test.py")
 UNITTEST_EXIT_CODE=$?
 
 if [ $UNITTEST_EXIT_CODE -ne 0 ]; then
 	echo -e "ERROR: At least one unit test failed. Please fix the issues before committing."
     echo -e "If this is intended, you can bypass the hook with 'git commit --no-verify'."
+    echo -e $UNITTEST_OUTPUT
 	exit 1
 fi
 

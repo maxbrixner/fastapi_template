@@ -6,7 +6,6 @@ from typing import Dict
 # ---------------------------------------------------------------------------- #
 
 from app.database import DatabaseDependency
-from app.core.dependencies import ConfigDependency
 from app.schemas.user import *
 from app.crud.user import *
 

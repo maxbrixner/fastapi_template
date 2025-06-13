@@ -13,7 +13,7 @@ from starlette.exceptions import HTTPException as StarlettHTTPException
 # ---------------------------------------------------------------------------- #
 
 from app.api.v1 import router as routerv1
-from app.core.config import config
+from app.services import get_configuration, setup_logger
 from app.core.exceptions import *
 from app.core.lifespan import *
 
@@ -27,9 +27,9 @@ def create_app() -> fastapi.FastAPI:
     exception handlers. It also initializes the database connection and
     logging configuration.
     """
-    config.setup_logging()
+    setup_logger()
 
-    config.load_configuration()
+    config = get_configuration()
 
     app = fastapi.FastAPI(
         title=config.project.name,

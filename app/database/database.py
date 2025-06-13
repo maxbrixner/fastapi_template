@@ -6,10 +6,15 @@ import logging
 import re
 import os
 from typing import Generator
+from functools import lru_cache
 
 # ---------------------------------------------------------------------------- #
 
-from app.core.config import config
+from app.services import get_configuration, ConfigSchema
+
+# ---------------------------------------------------------------------------- #
+
+logger = logging.getLogger("app.database")
 
 # ---------------------------------------------------------------------------- #
 
@@ -18,15 +23,17 @@ class Database():
     """
     Simple class for managing database connections using sqlmodel.
     """
-    _logger: logging.Logger
     _engine: sqlalchemy.engine.base.Engine | None
+    _config: ConfigSchema
 
     def __init__(self) -> None:
         """
         Initialize the Database class.
         """
-        self._logger = logging.getLogger("app.core.database")
         self._engine = None
+        self._config = get_configuration()
+
+        logger.info("Database initialized.")
 
     def connect(self) -> None:
         """
@@ -38,11 +45,11 @@ class Database():
         """
         self._engine = sqlmodel.create_engine(
             url=self._get_database_url(),
-            echo=config.database.echo,
-            pool_size=config.database.pool_size,
-            max_overflow=config.database.max_overflow)
+            echo=self._config.database.echo,
+            pool_size=self._config.database.pool_size,
+            max_overflow=self._config.database.max_overflow)
         sqlmodel.SQLModel.metadata.create_all(self._engine)
-        self._logger.info("Database connection established.")
+        logger.info("Database connection established.")
 
     def disconnect(self) -> None:
         """
@@ -52,7 +59,7 @@ class Database():
         if self._engine:
             self._engine.dispose()
         self._engine = None
-        self._logger.info("Database connection disposed.")
+        logger.info("Database connection disposed.")
 
     def get_session(self) -> Generator[sqlmodel.Session]:
         """
@@ -62,10 +69,10 @@ class Database():
             raise Exception("Database engine is not initialized.")
 
         with sqlmodel.Session(self._engine) as session:
-            self._logger.debug("Database session created.")
+            logger.debug("Database session created.")
             yield session
 
-        self._logger.debug("Database session closed.")
+        logger.debug("Database session closed.")
 
     def _get_database_url(self) -> str:
         """
@@ -75,7 +82,7 @@ class Database():
         are in the format {{VAR_NAME}} where VAR_NAME is the name of the
         environment variable to be replaced.
         """
-        url = config.database.url
+        url = self._config.database.url
 
         def replace_env_var(match: re.Match) -> str:
             """
@@ -94,6 +101,25 @@ class Database():
 # ---------------------------------------------------------------------------- #
 
 
-database = Database()
+@lru_cache
+def get_database() -> Database:
+    """
+    Get an instance of the Database class. his function is used to create a
+    singleton instance of the Database class.
+    """
+    return Database()
+
+# ---------------------------------------------------------------------------- #
+
+
+def get_database_session() -> Generator[sqlmodel.Session]:
+    """
+    Get a database session from the Database class. This function is used to
+    create a new session for each request.
+    """
+    database = get_database()
+    logger.debug("Yielding database session for request.")
+    yield from database.get_session()
+
 
 # ---------------------------------------------------------------------------- #

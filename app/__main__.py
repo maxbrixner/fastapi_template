@@ -1,7 +1,7 @@
 
 # ---------------------------------------------------------------------------- #
 
-from app.core.config import config
+from app.services import get_configuration
 
 # ---------------------------------------------------------------------------- #
 
@@ -12,8 +12,7 @@ if __name__ == "__main__":
     """
     import uvicorn
 
-    config.load_configuration()
-
+    config = get_configuration()
     host = config.backend.host
     port = int(config.backend.port)
 

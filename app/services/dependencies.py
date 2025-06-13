@@ -1,18 +1,17 @@
 # ---------------------------------------------------------------------------- #
 
 import fastapi
-import sqlmodel
 from typing import Annotated
 
 # ---------------------------------------------------------------------------- #
 
-from .config import config
+from ..services import get_configuration, ConfigSchema
 
 # ---------------------------------------------------------------------------- #
 
 
 ConfigDependency = Annotated[
-    sqlmodel.Session, fastapi.Depends(config.get_config)
+    ConfigSchema, fastapi.Depends(get_configuration)
 ]
 
 # ---------------------------------------------------------------------------- #
