@@ -16,17 +16,17 @@ logger = logging.getLogger("app.services")
 
 
 class _DatabaseSchema(pydantic.BaseModel):
-    url: str = "sqlite:///./test.db"
     echo: bool = False
-    pool_size: int = 5
     max_overflow: int = 10
+    pool_size: int = 5
+    url: str = "sqlite:///./test.db"
 
 
 class _ProjectSchema(pydantic.BaseModel):
-    title: str = "Blank Title"
-    description: str = "Blank Description"
-    version: str = "0.1.0"
-    author: str = "Blank Author"
+    author: str = "blank"
+    description: str = "blank"
+    title: str = "blank"
+    version: str = "blank"
 
 
 class _BackendSchema(pydantic.BaseModel):
@@ -36,12 +36,20 @@ class _BackendSchema(pydantic.BaseModel):
 
 
 class _CorsSchema(pydantic.BaseModel):
-    allow_origins: List[str] = []
     allow_credentials: bool = False
-    allow_methods: List[str] = []
     allow_headers: List[str] = []
+    allow_methods: List[str] = []
+    allow_origins: List[str] = []
+    enabled: bool = True
     expose_headers: List[str] = []
     max_age: Optional[int] = 600
+
+
+class _StaticFilesSchema(pydantic.BaseModel):
+    directory: str = "static"
+    enabled: bool = False
+    name: str = "static"
+    path: str = "/static"
 
 
 class ConfigSchema(pydantic.BaseModel):
@@ -49,6 +57,7 @@ class ConfigSchema(pydantic.BaseModel):
     cors: _CorsSchema = _CorsSchema()
     database: _DatabaseSchema = _DatabaseSchema()
     project: _ProjectSchema = _ProjectSchema()
+    static_files: _StaticFilesSchema = _StaticFilesSchema()
 
 # ---------------------------------------------------------------------------- #
 
