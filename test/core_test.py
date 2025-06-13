@@ -62,7 +62,8 @@ class TestExceptions(TestCase):
             Exception("Test exception")
         )
         assert isinstance(response, fastapi.responses.JSONResponse)
-        assert response.status_code == fastapi.status.HTTP_500_INTERNAL_SERVER_ERROR
+        assert response.status_code == fastapi.\
+            status.HTTP_500_INTERNAL_SERVER_ERROR
 
     async def test_http_exception_handler(self) -> None:
         """
@@ -87,7 +88,8 @@ class TestExceptions(TestCase):
             )
         )
         assert isinstance(response, fastapi.responses.JSONResponse)
-        assert response.status_code == fastapi.status.HTTP_500_INTERNAL_SERVER_ERROR
+        assert response.status_code == fastapi.status.\
+            HTTP_500_INTERNAL_SERVER_ERROR
 
     def test_invalid_route(self) -> None:
         """

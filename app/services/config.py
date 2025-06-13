@@ -53,6 +53,7 @@ class ConfigSchema(pydantic.BaseModel):
 # ---------------------------------------------------------------------------- #
 
 
+@lru_cache
 def get_configuration() -> ConfigSchema:
     """
     Load the configuration file from the config directory. The filename
