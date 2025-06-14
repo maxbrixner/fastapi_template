@@ -10,7 +10,7 @@ from functools import lru_cache
 
 # ---------------------------------------------------------------------------- #
 
-from app.services import get_configuration, ConfigSchema
+import app.services as services
 
 # ---------------------------------------------------------------------------- #
 
@@ -24,22 +24,16 @@ class Database():
     Simple class for managing database connections using sqlmodel.
     """
     _engine: sqlalchemy.engine.base.Engine | None
-    _config: ConfigSchema
+    _config: services.ConfigSchema
 
     def __init__(self) -> None:
         """
         Initialize the Database class.
         """
         self._engine = None
-        self._config = self.get_configuration()
+        self._config = services.get_configuration()
 
         logger.info("Database initialized.")
-
-    def get_configuration(self) -> ConfigSchema:
-        """
-        Get the configuration for the database.
-        """
-        return get_configuration()
 
     def connect(self) -> None:
         """

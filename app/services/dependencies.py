@@ -5,13 +5,13 @@ from typing import Annotated
 
 # ---------------------------------------------------------------------------- #
 
-from ..services import get_configuration, ConfigSchema
+import app.services as services
 
 # ---------------------------------------------------------------------------- #
 
 
 ConfigDependency = Annotated[
-    ConfigSchema, fastapi.Depends(get_configuration)
+    services.ConfigSchema, fastapi.Depends(services.get_configuration)
 ]
 
 # ---------------------------------------------------------------------------- #

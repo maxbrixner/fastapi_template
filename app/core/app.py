@@ -10,10 +10,10 @@ from starlette.exceptions import HTTPException as StarlettHTTPException
 
 # ---------------------------------------------------------------------------- #
 
+import app.services as services
+import app.core.exceptions as exceptions
+import app.core.lifespan as lifespan
 from app.api.v1 import router as routerv1
-from app.services import get_configuration, setup_logger
-from app.core.exceptions import *
-from app.core.lifespan import *
 
 # ---------------------------------------------------------------------------- #
 
@@ -25,9 +25,9 @@ def create_app() -> fastapi.FastAPI:
     exception handlers. It also initializes the database connection and
     logging configuration.
     """
-    setup_logger()
+    services.setup_logger()
 
-    config = get_configuration()
+    config = services.get_configuration()
 
     app = fastapi.FastAPI(
         title=config.project.title,
@@ -37,7 +37,7 @@ def create_app() -> fastapi.FastAPI:
         openapi_url=f"/openapi.json",
         docs_url=config.project.swagger_path,
         redoc_url=None,
-        lifespan=lifespan
+        lifespan=lifespan.lifespan
     )
 
     if config.cors.enabled:
@@ -66,10 +66,14 @@ def create_app() -> fastapi.FastAPI:
 
     app.include_router(routerv1)
 
-    app.add_exception_handler(Exception, exception_handler)
-    app.add_exception_handler(NotImplementedError, exception_handler)
-    app.add_exception_handler(HTTPException, http_exception_handler)
-    app.add_exception_handler(StarlettHTTPException, http_exception_handler)
+    app.add_exception_handler(
+        Exception, exceptions.exception_handler)
+    app.add_exception_handler(
+        NotImplementedError, exceptions.exception_handler)
+    app.add_exception_handler(
+        HTTPException, exceptions.http_exception_handler)
+    app.add_exception_handler(
+        StarlettHTTPException, exceptions.http_exception_handler)
 
     return app
 

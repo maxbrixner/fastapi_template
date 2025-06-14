@@ -6,7 +6,7 @@ from typing import Annotated
 
 # ---------------------------------------------------------------------------- #
 
-from .database import get_database_session
+from app.database import get_database_session
 
 # ---------------------------------------------------------------------------- #
 

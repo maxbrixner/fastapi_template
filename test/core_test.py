@@ -7,7 +7,6 @@ from contextlib import ExitStack
 
 # ---------------------------------------------------------------------------- #
 
-from app.services import ConfigSchema
 from app.core.exceptions import exception_handler, http_exception_handler
 from test._testcase import TestCase
 
@@ -24,17 +23,12 @@ class TestLifespan(TestCase):
         Test if the lifespan connects and disconnects the database.
         """
         with ExitStack() as stack:
-            mock_config = stack.enter_context(
-                patch('app.database.Database.get_configuration',
-                      return_value=ConfigSchema())
-            )
             mock_connect = stack.enter_context(
                 patch('app.database.Database.connect')
             )
             mock_disconnect = stack.enter_context(
                 patch('app.database.Database.disconnect')
             )
-            mock_config.return_value = ConfigSchema()
 
             with self.client:
                 response = self.client.get(
@@ -61,6 +55,7 @@ class TestExceptions(TestCase):
                 scope={"type": "http", "path": "/test", "headers": []}),
             Exception("Test exception")
         )
+
         assert isinstance(response, fastapi.responses.JSONResponse)
         assert response.status_code == fastapi.\
             status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -77,6 +72,7 @@ class TestExceptions(TestCase):
                 detail="Test HTTP exception"
             )
         )
+
         assert isinstance(response, fastapi.responses.JSONResponse)
         assert response.status_code == fastapi.status.HTTP_404_NOT_FOUND
 
@@ -87,6 +83,7 @@ class TestExceptions(TestCase):
                 "Test HTTP exception"
             )
         )
+
         assert isinstance(response, fastapi.responses.JSONResponse)
         assert response.status_code == fastapi.status.\
             HTTP_500_INTERNAL_SERVER_ERROR
@@ -96,6 +93,7 @@ class TestExceptions(TestCase):
         Test that an invalid route returns a handled error.
         """
         response = self.client.get(f"/test/fake-route")
+
         assert response.status_code == fastapi.status.HTTP_404_NOT_FOUND
         assert "detail" in response.json()
 

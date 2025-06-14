@@ -1,16 +1,16 @@
 # ---------------------------------------------------------------------------- #
 
 import logging
-
-# ---------------------------------------------------------------------------- #
-
 from fastapi import Request, Response
 from fastapi.templating import Jinja2Templates
 from functools import lru_cache
-from app.services import get_configuration
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp
 from typing import Awaitable, Callable, Dict
+
+# ---------------------------------------------------------------------------- #
+
+import app.services as services
 
 # ---------------------------------------------------------------------------- #
 
@@ -24,7 +24,11 @@ def get_templates() -> Jinja2Templates:
     """
     Returns a Jinja2Templates instance configured with the templates directory.
     """
-    config = get_configuration()
+    config = services.get_configuration()
+
+    if not config.templates.enabled:
+        raise Exception(
+            "Templates are not enabled in the configuration.")
 
     return Jinja2Templates(directory=config.templates.directory)
 
@@ -52,7 +56,7 @@ class TemplateHeaderMiddleware(BaseHTTPMiddleware):
         """
         super().__init__(app, dispatch)
 
-        config = get_configuration()
+        config = services.get_configuration()
 
         self._custom_headers = config.templates.headers
         self._swagger_path = config.project.swagger_path

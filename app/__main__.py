@@ -1,7 +1,7 @@
 
 # ---------------------------------------------------------------------------- #
 
-from app.services import get_configuration
+import app.services as services
 
 # ---------------------------------------------------------------------------- #
 
@@ -12,7 +12,7 @@ if __name__ == "__main__":
     """
     import uvicorn
 
-    config = get_configuration()
+    config = services.get_configuration()
     host = config.backend.host
     port = int(config.backend.port)
 

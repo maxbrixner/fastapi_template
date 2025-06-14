@@ -5,9 +5,9 @@ from typing import Dict
 
 # ---------------------------------------------------------------------------- #
 
+import app.schemas as schemas
+import app.crud as crud
 from app.database import DatabaseDependency
-from app.schemas.user import *
-from app.crud.user import *
 
 # ---------------------------------------------------------------------------- #
 
@@ -29,13 +29,13 @@ async def user_login() -> None:
 
 @router.post("/create")
 async def user_create(
-    user: UserCreateSchema,
+    user: schemas.user.UserCreateSchema,
     session: DatabaseDependency
 ) -> Dict:
     """
     Create a new user.
     """
-    create_user(session=session, user=user)
+    crud.user.create_user(session=session, user=user)
     return {"message": f"User '{user.username}' created successfully."}
 
 # ---------------------------------------------------------------------------- #

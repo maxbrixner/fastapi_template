@@ -4,7 +4,7 @@ import fastapi
 
 # ---------------------------------------------------------------------------- #
 
-from app.schemas.utils import HealthSchema, HealthEnum
+import app.schemas as schemas
 
 # ---------------------------------------------------------------------------- #
 
@@ -15,12 +15,12 @@ router = fastapi.APIRouter(prefix="/utils", tags=["utils"])
 
 
 @router.get("/health")
-async def utils_health() -> HealthSchema:
+async def utils_health() -> schemas.HealthSchema:
     """
     Return the health of the api.
     """
-    return HealthSchema(
-        health=HealthEnum.HEALTHY,
+    return schemas.HealthSchema(
+        health=schemas.HealthEnum.HEALTHY,
         message="API is healthy",
     )
 

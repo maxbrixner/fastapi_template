@@ -26,7 +26,9 @@ class TestV1API(TestCase):
         """
         Test the health endpoint to ensure the API is running and healthy.
         """
-        response = self.client.get(f"{self.api_version}/utils/health")
+        response = self.client.get(
+            f"{self.api_version}/utils/health")
+
         assert response.status_code == 200
         assert response.json()["health"] == "healthy"
 
@@ -36,9 +38,10 @@ class TestV1API(TestCase):
         as the login functionality is not yet implemented.
         """
         response = self.client.post(
-            f"{self.api_version}/user/login"
-        )
-        assert response.status_code == fastapi.status.HTTP_500_INTERNAL_SERVER_ERROR
+            f"{self.api_version}/user/login")
+
+        assert response.status_code == \
+            fastapi.status.HTTP_500_INTERNAL_SERVER_ERROR
 
     def test_user_create(self) -> None:
         """
@@ -53,6 +56,7 @@ class TestV1API(TestCase):
                 "password": "testpassword"
             }
         )
+
         assert response.status_code == 200
         assert "message" in response.json()
 

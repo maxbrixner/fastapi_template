@@ -1,14 +1,14 @@
 # ---------------------------------------------------------------------------- #
 
 import logging
-
-# ---------------------------------------------------------------------------- #
-
 from typing import Any, Dict
 from fastapi import Response
 from fastapi.staticfiles import StaticFiles
 from starlette.types import Scope
-from app.services.config import get_configuration
+
+# ---------------------------------------------------------------------------- #
+
+import app.services as services
 
 # ---------------------------------------------------------------------------- #
 
@@ -26,7 +26,7 @@ class StaticFilesWithHeaders(StaticFiles):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 
-        config = get_configuration()
+        config = services.get_configuration()
 
         self._custom_headers = config.static_files.headers
 

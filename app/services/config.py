@@ -19,14 +19,14 @@ class _DatabaseSchema(pydantic.BaseModel):
     echo: bool = False
     max_overflow: int = 10
     pool_size: int = 5
-    url: str = "sqlite:///./test.db"
+    url: str
 
 
 class _ProjectSchema(pydantic.BaseModel):
-    author: str = "blank"
-    description: str = "blank"
-    title: str = "blank"
-    version: str = "blank"
+    author: str
+    description: str
+    title: str
+    version: str
     swagger_path: Optional[str] = "/docs"
 
 
@@ -61,12 +61,12 @@ class _TemplatesSchema(pydantic.BaseModel):
 
 
 class ConfigSchema(pydantic.BaseModel):
-    backend: _BackendSchema = _BackendSchema()
-    cors: _CorsSchema = _CorsSchema()
-    database: _DatabaseSchema = _DatabaseSchema()
-    project: _ProjectSchema = _ProjectSchema()
-    static_files: _StaticFilesSchema = _StaticFilesSchema()
-    templates: _TemplatesSchema = _TemplatesSchema()
+    backend: _BackendSchema
+    cors: _CorsSchema
+    database: _DatabaseSchema
+    project: _ProjectSchema
+    static_files: _StaticFilesSchema
+    templates: _TemplatesSchema
 
 # ---------------------------------------------------------------------------- #
 
