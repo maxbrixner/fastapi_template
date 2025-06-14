@@ -5,7 +5,7 @@ import pydantic
 import pathlib
 import os
 import json
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 from functools import lru_cache
 
 # ---------------------------------------------------------------------------- #
@@ -25,6 +25,8 @@ class _DatabaseSchema(pydantic.BaseModel):
 class _ProjectSchema(pydantic.BaseModel):
     author: str
     description: str
+    summary: Optional[str] = None
+    terms_of_service: Optional[str] = None
     title: str
     version: str
     swagger_path: Optional[str] = "/docs"

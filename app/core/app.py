@@ -31,8 +31,10 @@ def create_app() -> fastapi.FastAPI:
 
     app = fastapi.FastAPI(
         title=config.project.title,
+        summary=config.project.summary,
         description=config.project.description,
         version=config.project.version,
+        terms_of_service=config.project.terms_of_service,
         root_path=config.backend.root_path,
         openapi_url=f"/openapi.json",
         docs_url=config.project.swagger_path,

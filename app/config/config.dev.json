@@ -29,9 +29,11 @@
     },
     "project": {
         "title": "Sample Project",
-        "description": "This is a sample project",
+        "description": "This is a **sample project**",
         "version": "0.1.0",
         "author": "John Doe",
+        "terms_of_service": "https://example.com/terms",
+        "summary": "This project is a sample application demonstrating the use of FastAPI.",
         "swagger_path": "/docs"
     },
     "static_files": {
