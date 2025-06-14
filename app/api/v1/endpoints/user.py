@@ -12,22 +12,22 @@ from app.database import DatabaseDependency
 # ---------------------------------------------------------------------------- #
 
 
-router = fastapi.APIRouter(prefix="/user", tags=["user"])
+router = fastapi.APIRouter(prefix="/user", tags=[schemas.Tags.user])
 
 # ---------------------------------------------------------------------------- #
 
 
-@router.post("/login")
+@router.post("/login", summary="User Login")
 async def user_login() -> None:
     """
-    Login a user.
+    Login a user (not yet implemented).
     """
     raise NotImplementedError("Login not implemented yet.")
 
 # ---------------------------------------------------------------------------- #
 
 
-@router.post("/create")
+@router.post("/create", summary="Create User")
 async def user_create(
     user: schemas.user.UserCreateSchema,
     session: DatabaseDependency

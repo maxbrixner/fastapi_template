@@ -2,5 +2,6 @@
 
 from .user import *
 from .utils import *
+from .tags import *
 
 # ---------------------------------------------------------------------------- #
