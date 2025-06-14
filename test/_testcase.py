@@ -15,7 +15,7 @@ import app.core as core
 import app.database as database
 import app.services as services
 from app.services.config import _BackendSchema, _CorsSchema, _DatabaseSchema, \
-    _ProjectSchema, _StaticFilesSchema, _TemplatesSchema
+    _ProjectSchema, _StaticFilesSchema, _TemplatesSchema, _GzipSchema
 
 # ---------------------------------------------------------------------------- #
 
@@ -31,6 +31,9 @@ def create_test_configuration() -> services.ConfigSchema:
         cors=_CorsSchema(),
         database=_DatabaseSchema(
             url="sqlite://",
+        ),
+        gzip=_GzipSchema(
+            enabled=True
         ),
         project=_ProjectSchema(
             author="Test Author",

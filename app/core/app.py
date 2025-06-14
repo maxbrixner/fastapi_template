@@ -5,6 +5,7 @@ import fastapi
 # ---------------------------------------------------------------------------- #
 
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.exceptions import HTTPException
 from starlette.exceptions import HTTPException as StarlettHTTPException
 
@@ -65,6 +66,13 @@ def create_app() -> fastapi.FastAPI:
     if config.templates.enabled:
         from app.services import TemplateHeaderMiddleware
         app.add_middleware(TemplateHeaderMiddleware)
+
+    if config.gzip.enabled:
+        app.add_middleware(
+            GZipMiddleware,
+            minimum_size=config.gzip.minimum_size,
+            compresslevel=config.gzip.compression_level
+        )
 
     app.include_router(routerv1)
 

@@ -62,13 +62,20 @@ class _TemplatesSchema(pydantic.BaseModel):
     headers: Dict[str, str] = {}
 
 
+class _GzipSchema(pydantic.BaseModel):
+    compression_level: int = 5
+    enabled: bool = False
+    minimum_size: int = 1000
+
+
 class ConfigSchema(pydantic.BaseModel):
-    backend: _BackendSchema
-    cors: _CorsSchema
+    backend: _BackendSchema = _BackendSchema()
+    cors: _CorsSchema = _CorsSchema()
     database: _DatabaseSchema
+    gzip: _GzipSchema = _GzipSchema()
     project: _ProjectSchema
-    static_files: _StaticFilesSchema
-    templates: _TemplatesSchema
+    static_files: _StaticFilesSchema = _StaticFilesSchema()
+    templates: _TemplatesSchema = _TemplatesSchema()
 
 # ---------------------------------------------------------------------------- #
 
