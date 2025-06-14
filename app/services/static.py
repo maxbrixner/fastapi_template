@@ -34,13 +34,17 @@ class StaticFilesWithHeaders(StaticFiles):
 
     async def get_response(self, path: str, scope: Scope) -> Response:
         """
-        Override the get_response method to add custom headers.
+        Override the get_response method to add custom headers. Please note
+        that this method is called for each static file request, and it will
+        only add headers if the response status code is 200 (OK) and the
+        header is not already present in the response.
         """
         response = await super().get_response(path, scope)
 
         if response.status_code == 200:
             for header, value in self._custom_headers.items():
-                response.headers[header] = value
+                if header.lower() not in response.headers:
+                    response.headers[header] = value
 
         return response
 

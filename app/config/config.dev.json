@@ -41,7 +41,8 @@
             "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self';",
             "Referrer-Policy": "strict-origin-when-cross-origin",
             "Cross-Origin-Resource-Policy": "same-origin",
-            "Cache-Control": "public, max-age=3600"
+            "Cache-Control": "public, max-age=3600",
+            "Content-Type": "application/json"
         },
         "path": "/static",
         "directory": "frontend/static",
