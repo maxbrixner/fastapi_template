@@ -2,6 +2,8 @@
 
 import unittest
 import os
+import pathlib
+import tempfile
 from fastapi import Request, Response
 from fastapi.templating import Jinja2Templates
 from unittest.mock import patch
@@ -167,16 +169,22 @@ class StaticTest(TestCase):
         """
         Test case for the get_response method of StaticFilesWithHeaders.
         """
-        # TODO
-        # with patch("pathlib.Path.open", unittest.mock.mock_open(
-        #        read_data="test content")):
-        #    static_files = services.StaticFilesWithHeaders(directory=".")
-        #    mock_scope = {"method": "GET", "type": "http",
-        #                  "path": "/static/test.txt"}
-        #    response = await static_files.get_response("/static/test.txt", mock_scope)#
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            temp_file.write(b"<html>Test</html>")
+            temp_file_path = temp_file.name
+            temp_file_dir = pathlib.Path(temp_file_path).parent
+            with patch("pathlib.Path.open", unittest.mock.mock_open(
+                    read_data="test content")):
+                static_files = services.StaticFilesWithHeaders(
+                    directory=temp_file_dir)
+                mock_scope = {"method": "GET", "type": "http",
+                              "path": temp_file_path, "headers": []}
+                response = await static_files.get_response(
+                    temp_file_path, mock_scope)
 
-        # assert isinstance(response, Response)
-        # assert response.status_code == 200
-        # assert response.headers.get("Cache-Control") == "no-cache"
+        assert isinstance(response, Response)
+        assert response.status_code == 200
+        # as defined in the test configuration
+        assert response.headers.get("Cache-Control") == "no-cache"
 
 # ---------------------------------------------------------------------------- #
