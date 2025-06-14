@@ -2,13 +2,51 @@
 
 import fastapi
 from fastapi.exceptions import HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from unittest.mock import patch
 from contextlib import ExitStack
 
 # ---------------------------------------------------------------------------- #
 
+import app.core as core
+import app.services as services
 from app.core.exceptions import exception_handler, http_exception_handler
 from test._testcase import TestCase
+
+# ---------------------------------------------------------------------------- #
+
+
+class TestApp(TestCase):
+    """
+    Test cases for the application's main functionality.
+    """
+
+    def test_create_app(self) -> None:
+        """
+        Test if the lifespan connects and disconnects the database.
+        """
+        with ExitStack() as stack:
+            mock_middleware = stack.enter_context(
+                patch('fastapi.FastAPI.add_middleware')
+            )
+            mock_mount = stack.enter_context(
+                patch('fastapi.FastAPI.mount')
+            )
+            mock_router = stack.enter_context(
+                patch('fastapi.FastAPI.include_router')
+            )
+            mock_exception_handler = stack.enter_context(
+                patch('fastapi.FastAPI.add_exception_handler')
+            )
+
+            app = core.create_app()
+
+        assert isinstance(app, fastapi.FastAPI)
+        assert app.title == "Test Title"
+        assert mock_middleware.called
+        assert mock_mount.called
+        assert mock_router.called
+        assert mock_exception_handler.called
 
 # ---------------------------------------------------------------------------- #
 
