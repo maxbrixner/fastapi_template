@@ -19,6 +19,17 @@ from app.api.v1 import router as routerv1
 # ---------------------------------------------------------------------------- #
 
 
+def get_version() -> str:
+    try:
+        import importlib.metadata
+        version = importlib.metadata.version("app")
+        return version
+    except ImportError:
+        return "unknown"
+
+# ---------------------------------------------------------------------------- #
+
+
 def create_app() -> fastapi.FastAPI:
     """
     Create and configure the FastAPI application instance.
@@ -34,7 +45,7 @@ def create_app() -> fastapi.FastAPI:
         title=config.project.title,
         summary=config.project.summary,
         description=config.project.description,
-        version=config.project.version,
+        version=get_version(),
         terms_of_service=config.project.terms_of_service,
         root_path=config.backend.root_path,
         openapi_url=f"/openapi.json",

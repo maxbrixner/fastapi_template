@@ -28,7 +28,6 @@ class _ProjectSchema(pydantic.BaseModel):
     summary: Optional[str] = None
     terms_of_service: Optional[str] = None
     title: str
-    version: str
     swagger_path: Optional[str] = "/docs"
 
 
@@ -36,6 +35,7 @@ class _BackendSchema(pydantic.BaseModel):
     host: str = "0.0.0.0"
     port: int = 8000
     root_path: str = ""
+    max_workers: int = 4
 
 
 class _CorsSchema(pydantic.BaseModel):

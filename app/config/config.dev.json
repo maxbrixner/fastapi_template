@@ -2,7 +2,8 @@
     "backend": {
         "host": "0.0.0.0",
         "port": 8000,
-        "root_path": ""
+        "root_path": "",
+        "max_workers": 4
     },
     "cors": {
         "allow_origins": [
@@ -35,7 +36,6 @@
     "project": {
         "title": "Sample Project",
         "description": "This is a **sample project**",
-        "version": "0.1.0",
         "author": "John Doe",
         "terms_of_service": "https://example.com/terms",
         "summary": "This project is a sample application demonstrating the use of FastAPI.",
