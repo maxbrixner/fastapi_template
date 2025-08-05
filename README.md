@@ -11,7 +11,8 @@ Create a virtual environment:
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install .
+pip install .[dev]
 ```
 
 Enable the GIT hooks:
@@ -36,7 +37,15 @@ tsc -p ./frontend/
 
 Or, in Visual Studio Code, press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd> to build.
 
-### 3. Run the FastAPI App
+### 3. Build the App
+
+Build the python package:
+
+```bash
+python -m build
+```
+
+### 5. Run the FastAPI App
 
 You can start the FastAPI server in several ways:
 

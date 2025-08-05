@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fastapi-template"
+version = "0.0.1"
+authors = [
+  { name="John Doe", email="john.doe@example.com" },
+]
+description = "This is a sample project"
+readme = "README.md"
+requires-python = ">=3.13"
+license = { file = "LICENSE.md" }
+keywords = ["sample", "project", "example"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent"
+]
+
+dependencies = [
+    "fastapi>=0.115.12",
+    "httpx>=0.28.1",
+    "jinja2>=3.1.6",
+    "pydantic>=2.11.5",
+    "pydantic[email]>=2.11.5",
+    "sqlmodel>=0.0.24",
+    "uvicorn>=0.34.2",
+]
+
+[project.urls]
+Source = "url://to/source"
+Issues = "url://to/issues"
+
+[project.optional-dependencies]
+dev = [
+  "build>=1.2.2",
+  "mypy>=1.15.0",
+  "setuptools>=80.9.0",
+]
+
+[tool.setuptools]
+packages = ["app"]

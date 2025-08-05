@@ -29,8 +29,9 @@ async def user_login() -> None:
 
 @router.post("/create", summary="Create User")
 async def user_create(
-    user: schemas.user.UserCreateSchema,
-    session: DatabaseDependency
+    session: DatabaseDependency,
+    user: schemas.user.UserCreateSchema = fastapi.Field(
+        ..., description="User data")
 ) -> Dict:
     """
     Create a new user.
