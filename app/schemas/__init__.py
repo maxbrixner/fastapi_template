@@ -1,5 +1,6 @@
 # ---------------------------------------------------------------------------- #
 
+from .config import *
 from .user import *
 from .utils import *
 from .tags import *
