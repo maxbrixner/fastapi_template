@@ -6,15 +6,16 @@ from typing import Annotated
 
 # ---------------------------------------------------------------------------- #
 
+import app.schemas as schemas
 from .templates import get_templates
-from .config import get_configuration, ConfigSchema
+from .config import get_configuration
 from .worker import get_worker_pool, WorkerPool
 
 # ---------------------------------------------------------------------------- #
 
 
 ConfigDependency = Annotated[
-    ConfigSchema, fastapi.Depends(get_configuration)
+    schemas.ConfigSchema, fastapi.Depends(get_configuration)
 ]
 
 TemplatesDependency = Annotated[

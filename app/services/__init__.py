@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------------------- #
 
-from .config import get_configuration, ConfigSchema
+from .config import get_configuration
 from .logging import setup_logger, ColonLevelFormatter
 from .templates import get_templates, TemplateHeaderMiddleware
 from .static import StaticFilesWithHeaders

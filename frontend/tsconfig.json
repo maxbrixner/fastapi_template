@@ -1,14 +1,52 @@
 {
     "compilerOptions": {
         "outDir": "../frontend/static/js",
-        "target": "esnext",
-        "module": "esnext",
-        "strict": true,
         "rootDir": "../frontend/components",
-        "sourceMap": false,
-        "removeComments": true
+        "removeComments": true,
+        "sourceMap": true,
+        "declaration": true,
+        "declarationMap": true,
+        "target": "ES2022",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "lib": [
+            "ES2022",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "strictPropertyInitialization": true,
+        "noImplicitThis": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedIndexedAccess": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "exactOptionalPropertyTypes": true,
+        "noImplicitOverride": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmitOnError": true,
+        "preserveConstEnums": true,
+        "skipLibCheck": true,
+        "allowJs": false,
+        "checkJs": false,
+        "allowUmdGlobalAccess": false
     },
     "include": [
-        "../frontend/components/**/*.ts"
+        "../frontend/components/**/*.ts",
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.test.ts",
+        "**/*.spec.ts",
     ]
 }

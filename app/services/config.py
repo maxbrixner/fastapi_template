@@ -36,7 +36,7 @@ def get_configuration() -> schemas.ConfigSchema:
 
     with config_file.open("r") as file:
         content = json.load(file)
-        config = ConfigSchema(**content)
+        config = schemas.ConfigSchema(**content)
 
     logger.info(f"Application configuration loaded.")
 

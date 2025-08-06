@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Description of the application goes here.">
+    <meta name="author" content="John Doe">
+    <meta name="keywords" content="Keywords related to the application">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>App</title>
+
+    {% block scripts %}
+    {% endblock %}
+
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/definitions.css') }}">
+    {% block styles %}
+    {% endblock %}
+</head>
+
+<body>
+    {% block header %}
+    <!-- Content will be injected here -->
+    {% endblock %}
+
+    {% block main %}
+    <!-- Content will be injected here -->
+    {% endblock %}
+</body>
+
+</html>

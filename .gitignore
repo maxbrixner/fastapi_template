@@ -1,12 +1,18 @@
-.venv
+# Virtual environment
+.venv/
+
+# Secrets
 .env
 
-__pycache__
-.mypy_cache
+# Python cache and build artifacts
+__pycache__/
+.mypy_cache/
 build/
 dist/
 *.egg-info/
 
+# Database files
 *.db
 
-frontend/static/*.js
+# Compiled files
+frontend/static/js/**/*

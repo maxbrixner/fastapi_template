@@ -11,6 +11,7 @@ from functools import lru_cache
 # ---------------------------------------------------------------------------- #
 
 import app.services as services
+import app.schemas as schemas
 
 # ---------------------------------------------------------------------------- #
 
@@ -24,7 +25,7 @@ class Database():
     Simple class for managing database connections using sqlmodel.
     """
     _engine: sqlalchemy.engine.base.Engine | None
-    _config: services.ConfigSchema
+    _config: schemas.ConfigSchema
 
     def __init__(self) -> None:
         """

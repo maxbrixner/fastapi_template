@@ -7,7 +7,7 @@ from typing import Dict
 
 import app.schemas as schemas
 import app.crud as crud
-from app.database import DatabaseDependency
+import app.database as database
 
 # ---------------------------------------------------------------------------- #
 
@@ -29,7 +29,7 @@ async def user_login() -> None:
 
 @router.post("/create", summary="Create User")
 async def user_create(
-    session: DatabaseDependency,
+    session: database.DatabaseDependency,
     user: schemas.user.UserCreateSchema = fastapi.Body(
         ..., description="User data")
 ) -> Dict:
