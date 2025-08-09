@@ -28,9 +28,9 @@ class WorkerPool(concurrent.futures.ThreadPoolExecutor):
         based on the configuration.
         """
         config = services.get_configuration()
-        super().__init__(max_workers=config.backend.max_workers)
+        super().__init__(max_workers=config.workers.max_workers)
         logger.info(f"WorkerPool initialized (with a maximum of "
-                    f"{config.backend.max_workers} workers).")
+                    f"{config.workers.max_workers} workers).")
 
     def submit(self, *args: Any, **kwargs: Any) -> concurrent.futures.Future:
         """

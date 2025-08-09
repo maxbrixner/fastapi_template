@@ -32,7 +32,6 @@ class BackendConfigSchema(pydantic.BaseModel):
     host: str = "0.0.0.0"
     port: int = 8000
     root_path: str = ""
-    max_workers: int = 4
 
 
 # ---------------------------------------------------------------------------- #
@@ -73,16 +72,24 @@ class GzipConfigSchema(pydantic.BaseModel):
     enabled: bool = False
     minimum_size: int = 1000
 
+# ---------------------------------------------------------------------------- #
+
+
+class WorkersConfigSchema(pydantic.BaseModel):
+    enabled: bool = False
+    max_workers: int = 4
 
 # ---------------------------------------------------------------------------- #
 
+
 class ConfigSchema(pydantic.BaseModel):
+    app: AppConfigSchema
     backend: BackendConfigSchema = BackendConfigSchema()
     cors: CorsConfigSchema = CorsConfigSchema()
     database: DatabaseConfigSchema
     gzip: GzipConfigSchema = GzipConfigSchema()
-    app: AppConfigSchema
     static_files: StaticFilesConfigSchema = StaticFilesConfigSchema()
     templates: TemplatesConfigSchema = TemplatesConfigSchema()
+    workers: WorkersConfigSchema = WorkersConfigSchema()
 
 # ---------------------------------------------------------------------------- #

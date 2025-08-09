@@ -26,6 +26,11 @@ def create_test_configuration() -> schemas.ConfigSchema:
     values.
     """
     return schemas.ConfigSchema(
+        app=schemas.AppConfigSchema(
+            author="Test Author",
+            description="Test Description",
+            title="Test Title"
+        ),
         backend=schemas.BackendConfigSchema(),
         cors=schemas.CorsConfigSchema(),
         database=schemas.DatabaseConfigSchema(
@@ -33,11 +38,6 @@ def create_test_configuration() -> schemas.ConfigSchema:
         ),
         gzip=schemas.GzipConfigSchema(
             enabled=True
-        ),
-        app=schemas.AppConfigSchema(
-            author="Test Author",
-            description="Test Description",
-            title="Test Title"
         ),
         static_files=schemas.StaticFilesConfigSchema(
             enabled=True,
@@ -47,6 +47,9 @@ def create_test_configuration() -> schemas.ConfigSchema:
         templates=schemas.TemplatesConfigSchema(
             enabled=True,
             headers={"Cache-Control": "no-cache"}
+        ),
+        workers=schemas.WorkersConfigSchema(
+            max_workers=4
         )
     )
 

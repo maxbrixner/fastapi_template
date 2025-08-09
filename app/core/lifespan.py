@@ -26,11 +26,14 @@ async def lifespan(app: fastapi.FastAPI) -> AsyncGenerator:
     Context manager for FastAPI lifespan events. Handles application startup
     and shutdown logic.
     """
+    config = services.get_configuration()
+
     database_instance = database.get_database()
 
     database_instance.connect()
 
-    worker_pool = services.get_worker_pool()
+    if config.workers.enabled:
+        worker_pool = services.get_worker_pool()
 
     logger.info("Application startup complete.")
 
@@ -38,7 +41,8 @@ async def lifespan(app: fastapi.FastAPI) -> AsyncGenerator:
 
     database_instance.disconnect()
 
-    worker_pool.shutdown(wait=True)
+    if config.workers.enabled:
+        worker_pool.shutdown(wait=True)
 
     logger.info("Application shutdown complete.")
 

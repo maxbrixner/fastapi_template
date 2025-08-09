@@ -79,6 +79,44 @@ class LoggingTest(TestCase):
 # ---------------------------------------------------------------------------- #
 
 
+class StaticTest(TestCase):
+    """
+    Test cases for static file operations.
+    """
+
+    def test_static_files_with_headers_initialization(self) -> None:
+        """
+        Test case for the StaticFilesWithHeaders class.
+        """
+        static_files = services.StaticFilesWithHeaders(directory=".")
+        assert isinstance(static_files, services.StaticFilesWithHeaders)
+        assert static_files._custom_headers == self.config.static_files.headers
+
+    async def test_static_files_with_headers_get_response(self) -> None:
+        """
+        Test case for the get_response method of StaticFilesWithHeaders.
+        """
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            temp_file.write(b"<html>Test</html>")
+            temp_file_path = temp_file.name
+            temp_file_dir = pathlib.Path(temp_file_path).parent
+            with patch("pathlib.Path.open", unittest.mock.mock_open(
+                    read_data="test content")):
+                static_files = services.StaticFilesWithHeaders(
+                    directory=temp_file_dir)
+                mock_scope = {"method": "GET", "type": "http",
+                              "path": temp_file_path, "headers": []}
+                response = await static_files.get_response(
+                    temp_file_path, mock_scope)
+
+        assert isinstance(response, Response)
+        assert response.status_code == 200
+        # as defined in the test configuration
+        assert response.headers.get("Cache-Control") == "no-cache"
+
+# ---------------------------------------------------------------------------- #
+
+
 class TemplatesTest(TestCase):
     """
     Test cases for template operations via Jinja2.
@@ -100,7 +138,11 @@ class TemplatesTest(TestCase):
         assert middleware._custom_headers == self.config.templates.headers
         assert middleware._swagger_path == self.config.app.swagger_path
 
-    async def _create_mock_request(self, path: str = "/", content_type: str = "text/html") -> Request:
+    async def _create_mock_request(
+        self,
+        path: str = "/",
+        content_type: str = "text/html"
+    ) -> Request:
         """
         Helper to create a mock Request object.
         """
@@ -109,7 +151,9 @@ class TemplatesTest(TestCase):
             "asgi": {"version": "3.0"},
             "method": "GET",
             "path": path,
-            "headers": [(b"content-type", content_type.encode())] if content_type else []
+            "headers": [
+                (b"content-type", content_type.encode())
+            ] if content_type else []
         }
         mock_receive = unittest.mock.AsyncMock()
         mock_send = unittest.mock.AsyncMock()
@@ -117,7 +161,8 @@ class TemplatesTest(TestCase):
 
     async def test_middleware_dispatch(self) -> None:
         """
-        Test case for dispatching a request through the TemplateHeaderMiddleware.
+        Test case for dispatching a request through the
+        TemplateHeaderMiddleware.
         """
         middleware = services.TemplateHeaderMiddleware(self.app)
 
@@ -157,35 +202,44 @@ class TemplatesTest(TestCase):
 # ---------------------------------------------------------------------------- #
 
 
-class StaticTest(TestCase):
-    def test_static_files_with_headers_initialization(self) -> None:
-        """
-        Test case for the StaticFilesWithHeaders class.
-        """
-        static_files = services.StaticFilesWithHeaders(directory=".")
-        assert isinstance(static_files, services.StaticFilesWithHeaders)
-        assert static_files._custom_headers == self.config.static_files.headers
+class WorkerTest(TestCase):
+    """
+    Test cases for worker-related functionality.
+    """
 
-    async def test_static_files_with_headers_get_response(self) -> None:
+    def _mock_task(self) -> None:
         """
-        Test case for the get_response method of StaticFilesWithHeaders.
+        Mock task for testing.
         """
-        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-            temp_file.write(b"<html>Test</html>")
-            temp_file_path = temp_file.name
-            temp_file_dir = pathlib.Path(temp_file_path).parent
-            with patch("pathlib.Path.open", unittest.mock.mock_open(
-                    read_data="test content")):
-                static_files = services.StaticFilesWithHeaders(
-                    directory=temp_file_dir)
-                mock_scope = {"method": "GET", "type": "http",
-                              "path": temp_file_path, "headers": []}
-                response = await static_files.get_response(
-                    temp_file_path, mock_scope)
+        import time
+        time.sleep(.1)
+        self._worker_result = "Task completed"
 
-        assert isinstance(response, Response)
-        assert response.status_code == 200
-        # as defined in the test configuration
-        assert response.headers.get("Cache-Control") == "no-cache"
+    def test_worker_pool_init(self) -> None:
+        """
+        Test case for the WorkerPool class initialization.
+        """
+        worker_pool = services.get_worker_pool()
+        assert isinstance(worker_pool, services.WorkerPool)
+        assert worker_pool._max_workers == self.config.workers.max_workers
+
+    async def test_worker_pool_submit(self) -> None:
+        """
+        Test case for submitting a task to the WorkerPool.
+        """
+        services.get_worker_pool.cache_clear()
+        worker_pool = services.get_worker_pool()
+        worker_pool.submit(self._mock_task)
+        worker_pool.shutdown(wait=True)
+        assert self._worker_result == "Task completed"
+
+    async def test_worker_pool_shutdown(self) -> None:
+        """
+        Test case for shutting down the WorkerPool.
+        """
+        services.get_worker_pool.cache_clear()
+        worker_pool = services.get_worker_pool()
+        worker_pool.shutdown()
+        assert worker_pool._shutdown
 
 # ---------------------------------------------------------------------------- #

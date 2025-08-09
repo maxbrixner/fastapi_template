@@ -1,9 +1,16 @@
 {
+    "app": {
+        "title": "Sample Project",
+        "description": "This is a **sample project**",
+        "author": "John Doe",
+        "terms_of_service": "https://example.com/terms",
+        "summary": "This project is a sample application demonstrating the use of FastAPI.",
+        "swagger_path": "/docs"
+    },
     "backend": {
         "host": "0.0.0.0",
         "port": 8000,
-        "root_path": "",
-        "max_workers": 4
+        "root_path": ""
     },
     "cors": {
         "allow_origins": [
@@ -33,14 +40,6 @@
         "minimum_size": 1000,
         "compression_level": 5
     },
-    "app": {
-        "title": "Sample Project",
-        "description": "This is a **sample project**",
-        "author": "John Doe",
-        "terms_of_service": "https://example.com/terms",
-        "summary": "This project is a sample application demonstrating the use of FastAPI.",
-        "swagger_path": "/docs"
-    },
     "static_files": {
         "enabled": true,
         "headers": {
@@ -67,5 +66,9 @@
             "Cross-Origin-Opener-Policy": "same-origin",
             "Cross-Origin-Embedder-Policy": "require-corp"
         }
+    },
+    "workers": {
+        "max_workers": 4,
+        "enabled": true
     }
 }
