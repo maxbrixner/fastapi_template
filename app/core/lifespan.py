@@ -30,7 +30,7 @@ async def lifespan(app: fastapi.FastAPI) -> AsyncGenerator:
 
     database_instance.connect()
 
-    # worker_pool = services.get_worker_pool()
+    worker_pool = services.get_worker_pool()
 
     logger.info("Application startup complete.")
 
@@ -38,7 +38,7 @@ async def lifespan(app: fastapi.FastAPI) -> AsyncGenerator:
 
     database_instance.disconnect()
 
-    # worker_pool.shutdown(wait=True)
+    worker_pool.shutdown(wait=True)
 
     logger.info("Application shutdown complete.")
 

@@ -7,7 +7,7 @@ from functools import lru_cache
 
 # ---------------------------------------------------------------------------- #
 
-from .config import get_configuration
+import app.services as services
 
 # ---------------------------------------------------------------------------- #
 
@@ -27,7 +27,7 @@ class WorkerPool(concurrent.futures.ThreadPoolExecutor):
         Initialize the WorkerPool with a maximum number of workers
         based on the configuration.
         """
-        config = get_configuration()
+        config = services.get_configuration()
         super().__init__(max_workers=config.backend.max_workers)
         logger.info(f"WorkerPool initialized (with a maximum of "
                     f"{config.backend.max_workers} workers).")
