@@ -4,6 +4,7 @@ import unittest
 import os
 import pathlib
 import tempfile
+import logging
 from fastapi import Request, Response
 from fastapi.templating import Jinja2Templates
 from unittest.mock import patch
@@ -52,6 +53,27 @@ class LoggingTest(TestCase):
     """
     Test cases for logging operations.
     """
+
+    def test_colon_logger(self) -> None:
+        """
+        Test case for colon level formatter.
+        """
+        formatter = services.ColonLevelFormatter(
+            fmt="%(levelname)s %(message)s"
+        )
+        formatted = formatter.format(
+            record=logging.LogRecord(
+                name="test",
+                level=logging.DEBUG,
+                pathname="",
+                lineno=0,
+                msg="Test message",
+                args=(),
+                exc_info=None
+            )
+        )
+
+        assert formatted == "DEBUG: Test message"
 
     def test_setup_logger(self) -> None:
         """
