@@ -59,7 +59,7 @@ class TemplateHeaderMiddleware(BaseHTTPMiddleware):
         config = services.get_configuration()
 
         self._custom_headers = config.templates.headers
-        self._swagger_path = config.project.swagger_path
+        self._swagger_path = config.app.swagger_path
 
         logger.info("Template headers middleware initialized")
 

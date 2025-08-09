@@ -12,6 +12,7 @@ from contextlib import ExitStack
 # ---------------------------------------------------------------------------- #
 
 import app.services as services
+import app.schemas as schemas
 from test._testcase import TestCase
 
 # ---------------------------------------------------------------------------- #
@@ -38,9 +39,9 @@ class ConfigTest(TestCase):
             )
 
             config = services.get_configuration()
-            assert config.project.title == "Test Title"
+            assert config.app.title == "Test Title"
             mock_file.assert_called_once()
-            assert isinstance(config, services.ConfigSchema)
+            assert isinstance(config, schemas.ConfigSchema)
 
         self.patch_config.start()
 
@@ -97,7 +98,7 @@ class TemplatesTest(TestCase):
         middleware = services.TemplateHeaderMiddleware(self.app)
         assert isinstance(middleware, services.TemplateHeaderMiddleware)
         assert middleware._custom_headers == self.config.templates.headers
-        assert middleware._swagger_path == self.config.project.swagger_path
+        assert middleware._swagger_path == self.config.app.swagger_path
 
     async def _create_mock_request(self, path: str = "/", content_type: str = "text/html") -> Request:
         """

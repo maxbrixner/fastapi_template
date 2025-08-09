@@ -16,15 +16,15 @@ router = fastapi.APIRouter(prefix="/home", tags=[schemas.Tags.gui])
 
 
 @router.get("", summary="Home Gui Page")
-async def demo_gui_page(
+async def home_gui_page(
     request: fastapi.Request,
     templates: services.TemplatesDependency,
-) -> None:
+) -> fastapi.responses.HTMLResponse:
     """
-    Displays a demo GUI page.
+    Displays a home GUI page.
     """
     return templates.TemplateResponse(
-        "demo.html",
+        "home.html",
         context={
             "request": request
         }

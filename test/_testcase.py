@@ -14,39 +14,37 @@ from typing import Generator
 import app.core as core
 import app.database as database
 import app.services as services
-from app.services.config import _BackendSchema, _CorsSchema, _DatabaseSchema, \
-    _ProjectSchema, _StaticFilesSchema, _TemplatesSchema, _GzipSchema
+import app.schemas as schemas
 
 # ---------------------------------------------------------------------------- #
 
 
-def create_test_configuration() -> services.ConfigSchema:
+def create_test_configuration() -> schemas.ConfigSchema:
     """
     Create a test configuration with default values for testing purposes.
     This function initializes a ConfigSchema instance with predefined
     values.
     """
-    return services.ConfigSchema(
-        backend=_BackendSchema(),
-        cors=_CorsSchema(),
-        database=_DatabaseSchema(
+    return schemas.ConfigSchema(
+        backend=schemas.BackendConfigSchema(),
+        cors=schemas.CorsConfigSchema(),
+        database=schemas.DatabaseConfigSchema(
             url="sqlite://",
         ),
-        gzip=_GzipSchema(
+        gzip=schemas.GzipConfigSchema(
             enabled=True
         ),
-        project=_ProjectSchema(
+        app=schemas.AppConfigSchema(
             author="Test Author",
             description="Test Description",
-            title="Test Title",
-            version="1.0.0"
+            title="Test Title"
         ),
-        static_files=_StaticFilesSchema(
+        static_files=schemas.StaticFilesConfigSchema(
             enabled=True,
             headers={"Cache-Control": "no-cache"},
             directory=".",
         ),
-        templates=_TemplatesSchema(
+        templates=schemas.TemplatesConfigSchema(
             enabled=True,
             headers={"Cache-Control": "no-cache"}
         )
@@ -67,7 +65,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
     session: sqlmodel.Session
     api_version: str
 
-    config: services.ConfigSchema
+    config: schemas.ConfigSchema
 
     patch_config: unittest.mock._patch
     patch_logger: unittest.mock._patch
@@ -124,7 +122,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         def get_session_override() -> Generator[sqlmodel.Session]:
             yield self.session
 
-        def get_config_override() -> services.ConfigSchema:
+        def get_config_override() -> schemas.ConfigSchema:
             return self.config
 
         self.app.dependency_overrides[

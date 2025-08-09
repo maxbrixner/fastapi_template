@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional
 # ---------------------------------------------------------------------------- #
 
 
-class _DatabaseSchema(pydantic.BaseModel):
+class DatabaseConfigSchema(pydantic.BaseModel):
     echo: bool = False
     max_overflow: int = 10
     pool_size: int = 5
@@ -16,19 +16,19 @@ class _DatabaseSchema(pydantic.BaseModel):
 # ---------------------------------------------------------------------------- #
 
 
-class _ProjectSchema(pydantic.BaseModel):
+class AppConfigSchema(pydantic.BaseModel):
     author: str
     description: str
     summary: Optional[str] = None
     terms_of_service: Optional[str] = None
     title: str
-    swagger_path: Optional[str] = "/docs"
+    swagger_path: str = "/docs"
 
 
 # ---------------------------------------------------------------------------- #
 
 
-class _BackendSchema(pydantic.BaseModel):
+class BackendConfigSchema(pydantic.BaseModel):
     host: str = "0.0.0.0"
     port: int = 8000
     root_path: str = ""
@@ -38,19 +38,19 @@ class _BackendSchema(pydantic.BaseModel):
 # ---------------------------------------------------------------------------- #
 
 
-class _CorsSchema(pydantic.BaseModel):
+class CorsConfigSchema(pydantic.BaseModel):
     allow_credentials: bool = False
     allow_headers: List[str] = []
     allow_methods: List[str] = []
     allow_origins: List[str] = []
     enabled: bool = True
     expose_headers: List[str] = []
-    max_age: Optional[int] = 600
+    max_age: int = 600
 
 
 # ---------------------------------------------------------------------------- #
 
-class _StaticFilesSchema(pydantic.BaseModel):
+class StaticFilesConfigSchema(pydantic.BaseModel):
     directory: str = "static"
     enabled: bool = False
     headers: Dict[str, str] = {}
@@ -60,7 +60,7 @@ class _StaticFilesSchema(pydantic.BaseModel):
 # ---------------------------------------------------------------------------- #
 
 
-class _TemplatesSchema(pydantic.BaseModel):
+class TemplatesConfigSchema(pydantic.BaseModel):
     directory: str = "templates"
     enabled: bool = False
     headers: Dict[str, str] = {}
@@ -68,7 +68,7 @@ class _TemplatesSchema(pydantic.BaseModel):
 # ---------------------------------------------------------------------------- #
 
 
-class _GzipSchema(pydantic.BaseModel):
+class GzipConfigSchema(pydantic.BaseModel):
     compression_level: int = 5
     enabled: bool = False
     minimum_size: int = 1000
@@ -77,12 +77,12 @@ class _GzipSchema(pydantic.BaseModel):
 # ---------------------------------------------------------------------------- #
 
 class ConfigSchema(pydantic.BaseModel):
-    backend: _BackendSchema = _BackendSchema()
-    cors: _CorsSchema = _CorsSchema()
-    database: _DatabaseSchema
-    gzip: _GzipSchema = _GzipSchema()
-    project: _ProjectSchema
-    static_files: _StaticFilesSchema = _StaticFilesSchema()
-    templates: _TemplatesSchema = _TemplatesSchema()
+    backend: BackendConfigSchema = BackendConfigSchema()
+    cors: CorsConfigSchema = CorsConfigSchema()
+    database: DatabaseConfigSchema
+    gzip: GzipConfigSchema = GzipConfigSchema()
+    app: AppConfigSchema
+    static_files: StaticFilesConfigSchema = StaticFilesConfigSchema()
+    templates: TemplatesConfigSchema = TemplatesConfigSchema()
 
 # ---------------------------------------------------------------------------- #

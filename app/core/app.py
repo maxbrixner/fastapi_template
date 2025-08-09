@@ -43,14 +43,14 @@ def create_app() -> fastapi.FastAPI:
     config = services.get_configuration()
 
     app = fastapi.FastAPI(
-        title=config.project.title,
-        summary=config.project.summary,
-        description=config.project.description,
+        title=config.app.title,
+        summary=config.app.summary,
+        description=config.app.description,
         version=get_version(),
-        terms_of_service=config.project.terms_of_service,
+        terms_of_service=config.app.terms_of_service,
         root_path=config.backend.root_path,
         openapi_url=f"/openapi.json",
-        docs_url=config.project.swagger_path,
+        docs_url=config.app.swagger_path,
         redoc_url=None,
         lifespan=lifespan.lifespan
     )

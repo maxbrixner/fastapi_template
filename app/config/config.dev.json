@@ -33,7 +33,7 @@
         "minimum_size": 1000,
         "compression_level": 5
     },
-    "project": {
+    "appp": {
         "title": "Sample Project",
         "description": "This is a **sample project**",
         "author": "John Doe",
