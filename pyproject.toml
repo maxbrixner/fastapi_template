@@ -30,6 +30,7 @@ dependencies = [
     "pydantic[email]>=2.11.5",
     "sqlmodel>=0.0.24",
     "uvicorn>=0.34.2",
+    "psycopg2-binary>=2.9.10"
 ]
 
 [project.urls]

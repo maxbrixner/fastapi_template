@@ -51,6 +51,7 @@ class Database():
             max_overflow=self._config.database.max_overflow)
         sqlmodel.SQLModel.metadata.create_all(self._engine)
         logger.info("Database connection established.")
+        logger.info(f"Database url: '{self._engine.url}'")
 
     def disconnect(self) -> None:
         """

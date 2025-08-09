@@ -14,6 +14,51 @@
             "command": ".venv/bin/python -m unittest discover --failfast --verbose --start-directory ./test --pattern *_test.py",
             "problemMatcher": [],
             "group": "test",
+        },
+        {
+            "type": "shell",
+            "label": "build docker",
+            "command": "docker compose -f deploy/docker.yaml --env-file .env build",
+            "problemMatcher": [],
+            "group": "build",
+        },
+        {
+            "type": "shell",
+            "label": "run docker",
+            "command": "docker compose -f deploy/docker.yaml --env-file .env up",
+            "problemMatcher": [],
+            "group": "build",
+        },
+        {
+            "type": "shell",
+            "label": "run docker (background)",
+            "command": "docker compose -f deploy/docker.yaml --env-file .env up -d",
+            "problemMatcher": [],
+            "group": "build",
+        },
+        {
+            "type": "shell",
+            "label": "enter docker bash",
+            "command": "docker compose -f deploy/docker.yaml --env-file .env exec app bash",
+            "problemMatcher": [],
+            "group": "test"
+        },
+        {
+            "type": "shell",
+            "label": "show docker logs",
+            "command": "docker compose -f deploy/docker.yaml --env-file .env logs --follow",
+            "problemMatcher": [],
+            "group": "build",
+        },
+        {
+            "type": "shell",
+            "label": "stop docker",
+            "dependsOn": [
+                "start database"
+            ],
+            "command": "docker compose -f deploy/docker.yaml --env-file .env down",
+            "problemMatcher": [],
+            "group": "build",
         }
     ]
 }

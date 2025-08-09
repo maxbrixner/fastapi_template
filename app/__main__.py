@@ -1,6 +1,10 @@
 
 # ---------------------------------------------------------------------------- #
 
+import os
+
+# ---------------------------------------------------------------------------- #
+
 import app.services as services
 
 # ---------------------------------------------------------------------------- #
@@ -12,9 +16,8 @@ if __name__ == "__main__":
     """
     import uvicorn
 
-    config = services.get_configuration()
-    host = config.backend.host
-    port = int(config.backend.port)
+    host = os.getenv("HOST", "0.0.0.0")
+    port = int(os.getenv("PORT", 8000))
 
     uvicorn.run(app="app:create_app", host=host,
                 port=port, reload=True, factory=True)
