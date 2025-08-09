@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
-        "outDir": "../frontend/static/js",
-        "rootDir": "../frontend/components",
+        "outDir": "./static/js",
+        "rootDir": "./components",
         "removeComments": true,
         "sourceMap": true,
         "declaration": true,
@@ -42,11 +42,13 @@
         "allowUmdGlobalAccess": false
     },
     "include": [
-        "../frontend/components/**/*.ts",
+        "./components/**/*.ts",
+        "./components/**/*.tsx"
     ],
     "exclude": [
         "node_modules",
         "**/*.test.ts",
-        "**/*.spec.ts",
+        "**/*.spec.tsx",
+        "./static/**/*"
     ]
 }

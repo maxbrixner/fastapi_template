@@ -45,7 +45,6 @@
         "enabled": true,
         "headers": {
             "X-Content-Type-Options": "nosniff",
-            "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self';",
             "Referrer-Policy": "strict-origin-when-cross-origin",
             "Cross-Origin-Resource-Policy": "same-origin",
             "Cache-Control": "public, max-age=3600",
@@ -60,7 +59,6 @@
         "directory": "frontend/templates",
         "headers": {
             "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
-            "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self';",
             "X-Content-Type-Options": "nosniff",
             "X-Frame-Options": "DENY",
             "Referrer-Policy": "strict-origin-when-cross-origin",
