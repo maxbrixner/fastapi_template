@@ -14,7 +14,8 @@ from starlette.exceptions import HTTPException as StarlettHTTPException
 import app.services as services
 import app.core.exceptions as exceptions
 import app.core.lifespan as lifespan
-from app.api.v1 import router as routerv1
+from app.api.v1 import router as router_api_v1
+from app.gui.v1 import router as router_gui_v1
 
 # ---------------------------------------------------------------------------- #
 
@@ -85,7 +86,8 @@ def create_app() -> fastapi.FastAPI:
             compresslevel=config.gzip.compression_level
         )
 
-    app.include_router(routerv1)
+    app.include_router(router_api_v1)
+    app.include_router(router_gui_v1)
 
     app.add_exception_handler(
         Exception, exceptions.exception_handler)

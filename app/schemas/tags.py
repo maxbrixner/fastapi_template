@@ -10,9 +10,11 @@ class Tags(str, enum.Enum):
     """
     Enum for FastAPI router tags.
     """
+    api = "api"
+    gui = "gui"
+
     v1 = "v1"
 
-    gui = "gui"
     user = "user"
     utils = "utils"
 
